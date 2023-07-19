@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 16:47:30
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-18 18:57:20
+# @Last Modified time: 2023-07-19 11:43:22
 
 
 from snapi.snrequests import SnRequests
@@ -19,11 +19,11 @@ class SnBaseApi(SnRequests):
         self.password = password
         self.otp_code = otp_code
         super(SnBaseApi, self).__init__()
-        self.snauth = SynologyAuth(self.ip_address, self.port, self.username, self.password, otp_code=self.otp_code)
 
     @property
     def sid(self):
-        sid = self.snauth.login(self.app)
+        snauth = SynologyAuth(self.ip_address, self.port, self.username, self.password, otp_code=self.otp_code)
+        sid = snauth.login(self.app)
         return sid
 
     @property
@@ -35,16 +35,10 @@ class SnBaseApi(SnRequests):
         apis = snres_json['data']
         return apis
 
+    def sn_requests_with_sid(self, urlpath: str, api_name: str, params: str, method: str = 'get'):
+        snres_json = self.sn_requests(urlpath, api_name, params, sid=self.sid, method=method)
+        return snres_json
+
     def get_api_info(self, api_name: str):
         api_info = self.apis.get(api_name)
         return api_info
-
-    def get_api_version(self, api_name: str):
-        api_info = self.apis.get(api_name)
-        version = api_info.get('maxVersion')
-        return version
-
-    def get_api_urlpath(self, api_name: str):
-        api_info = self.apis.get(api_name)
-        urlpath = api_info.get('path')
-        return urlpath

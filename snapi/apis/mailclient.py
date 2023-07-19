@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-18 18:54:47
+# @Last Modified time: 2023-07-19 11:43:53
 
 
 from .base import SnBaseApi
@@ -20,5 +20,5 @@ class MailClient(SnBaseApi):
         version = api_info.get('maxVersion')
         params = {'version': version, 'method': 'set', 'session': self.app,
                   'condition': condition, 'action': action, 'id': '13'}
-        snres_json = self.sn_requests(urlpath, api_name, params, method='post')
+        snres_json = self.sn_requests_with_sid(urlpath, api_name, params, method='post')
         return snres_json

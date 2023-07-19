@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-14 15:52:43
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-18 18:58:18
+# @Last Modified time: 2023-07-19 11:38:56
 
 
 import threading
@@ -12,6 +12,8 @@ from snapi.snrequests import SnRequests
 
 class SynologyAuth(SnRequests):
     _instance_lock = threading.Lock()
+    _instance = None
+    sid = None
 
     def __init__(self, ip_address: str, port: str, username: str, password: str, otp_code: str = None):
         self.ip_address: str = ip_address
@@ -21,12 +23,12 @@ class SynologyAuth(SnRequests):
         self.otp_code = otp_code
         super(SynologyAuth, self).__init__()
 
-    # def __new__(cls, *args, **kwargs):
-    #     if not hasattr(SynologyAuth, '_instance'):
-    #         with SynologyAuth._instance_lock:
-    #             if not hasattr(SynologyAuth, '_instance'):
-    #                 SynologyAuth._instance = super().__new__(cls)
-    #     return SynologyAuth._instance
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            with cls._instance_lock:
+                if not cls._instance:
+                    cls._instance = super().__new__(cls)
+        return cls._instance
 
     @property
     def api_name(self):
@@ -55,5 +57,5 @@ class SynologyAuth(SnRequests):
         params = {'version': self.version, 'method': 'logout', 'session': app}
         urlpath, api_name = self.urlpath, self.api_name
         _ = self.sn_requests(urlpath, api_name, params)
-        # self.sid = None
+        self.sid = None
         return

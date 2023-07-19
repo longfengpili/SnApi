@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 17:12:49
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-18 18:53:01
+# @Last Modified time: 2023-07-19 11:38:34
 
 
 import requests
@@ -22,7 +22,6 @@ class SnRequests:
     def __init__(self, cert_verify: bool = False, dsm_version: int = 7):
         self.verify = cert_verify
         self.version = dsm_version
-        self._sid = None
 
         if self.verify is False:
             disable_warnings(InsecureRequestWarning)
@@ -32,15 +31,7 @@ class SnRequests:
         baseurl = f'https://{self.ip_address}:{self.port}/webapi'
         return baseurl
 
-    @property
-    def sid(self):
-        return self._sid
-
-    @sid.setter
-    def sid(self, sid):
-        self._sid = sid
-
-    def sn_requests(self, urlpath: str, api_name: str, params: dict, method: str = 'get'):
+    def sn_requests(self, urlpath: str, api_name: str, params: dict, sid: str = None, method: str = 'get'):
         def request_by_method(method: str, url: str, params: dict, data: dict = None):
             if method == 'post':
                 snres = requests.post(url, params, verify=self.verify)
@@ -51,7 +42,7 @@ class SnRequests:
             return snres
 
         params['api'] = api_name
-        params['_sid'] = self.sid
+        params['_sid'] = sid
         url = f"{self.baseurl}/{urlpath}"
         # snrequestlogger.debug(f"[{method.upper()}::{api_name}]{url}")
         try:
