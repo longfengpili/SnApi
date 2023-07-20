@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 16:47:30
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 16:21:47
+# @Last Modified time: 2023-07-20 16:32:10
 
 
 from snapi.snrequests import SnRequests
@@ -19,6 +19,10 @@ class SnBaseApi(SnRequests):
         self.password = password
         self.otp_code = otp_code
         super(SnBaseApi, self).__init__()
+
+    @property
+    def errors(self):
+        return 
 
     @property
     def app(self):

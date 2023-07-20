@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 17:12:49
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 16:14:49
+# @Last Modified time: 2023-07-20 16:42:46
 
 
 import requests
@@ -53,11 +53,12 @@ class SnRequests:
         snres_json = snres.json()
         # snrequestlogger.info(snres_json)
 
-        self.judge_error(snres_json)
+        snres_info = f"[{method}]{snres.url}" if method == 'get' else f"[{method}]{snres.url}, params: {params}"
+        self.judge_error(snres_json, snres_info)
 
         return snres_json
 
-    def judge_error(self, response: dict[str, object]):
+    def judge_error(self, response: dict[str, object], request_info: str):
         # code, message = 200, 'success'
         error = response.get('error')
         if error:
@@ -66,4 +67,5 @@ class SnRequests:
             if not message:
                 errors = BASE_ERRORS | self.errors if self.errors else BASE_ERRORS
                 message = errors.get(code)
+            message = f"{message}, [request_info]{request_info}"
             raise SynoError(code, message)
