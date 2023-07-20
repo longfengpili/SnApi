@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 12:18:02
+# @Last Modified time: 2023-07-20 16:27:51
 
 
 import pytest
@@ -25,7 +25,7 @@ class TestMailClient:
         pass
 
     def test_filter(self):
-        condition = '[{"name":"subject","not_operator":false,"value":"QQ OR 腾讯"}]'
+        condition = '[{"name":"subject","value":"QQ OR 腾讯"}]'
         action = '[{"name":"move_to","value":"7"},{"name":"set_label","value":"6"}]'
         snres_json = self.mailclient.filter(condition, action)
         print(snres_json)

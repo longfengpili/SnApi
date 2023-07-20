@@ -2,16 +2,15 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 17:12:49
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 10:20:36
+# @Last Modified time: 2023-07-20 16:14:49
 
 
 import requests
 from urllib3 import disable_warnings
 from urllib3.exceptions import InsecureRequestWarning
 
-from snapi.exceptions import CODE_SUCCESS, ERROR_CODES, AUTH_ERROR_CODES
-# from snapi.exceptions import DOWNLOAD_STATION_ERROR_CODES, VIRTUALIZATION_ERROR_CODES, FILE_STATION_ERROR_CODES
-from snapi.exceptions import SynoConnectionError, HTTPError, JSONDecodeError, LoginError
+from snapi.exceptions import BASE_ERRORS
+from snapi.exceptions import SynoError
 
 import logging
 snrequestlogger = logging.getLogger('request')
@@ -32,6 +31,10 @@ class SnRequests:
         baseurl = f'https://{self.ip_address}:{self.port}/webapi'
         return baseurl
 
+    @property
+    def errors(self):
+        return 
+
     def sn_requests(self, urlpath: str, api_name: str, params: dict, sid: str = None, method: str = 'get'):
         def request_by_method(method: str, url: str, params: dict, data: dict = None):
             if method == 'post':
@@ -46,27 +49,21 @@ class SnRequests:
         params['_sid'] = sid
         url = f"{self.baseurl}/{urlpath}"
         # snrequestlogger.debug(f"[{method.upper()}::{api_name}]{url}")
-        try:
-            snres = request_by_method(method, url, params)
-            snres.raise_for_status()
-            snres_json = snres.json()
-            # snrequestlogger.info(snres_json)
-        except requests.exceptions.ConnectionError as e:
-            raise SynoConnectionError(error_message=e.args[0])
-        except requests.exceptions.HTTPError as e:
-            raise HTTPError(error_message=str(e.args))
-        except requests.exceptions.JSONDecodeError as e:
-            raise JSONDecodeError(error_message=str(e.args))
+        snres = request_by_method(method, url, params)
+        snres_json = snres.json()
+        # snrequestlogger.info(snres_json)
 
-        error_code = self.get_error_code(snres_json)
-        if error_code:
-            raise LoginError(error_code)
+        self.judge_error(snres_json)
+
         return snres_json
 
-    @staticmethod
-    def get_error_code(response: dict[str, object]):
-        if response.get('success'):
-            code = CODE_SUCCESS
-        else:
-            code = response.get('error').get('code')
-        return code
+    def judge_error(self, response: dict[str, object]):
+        # code, message = 200, 'success'
+        error = response.get('error')
+        if error:
+            code = error.get('code')
+            message = error.get('errors')
+            if not message:
+                errors = BASE_ERRORS | self.errors if self.errors else BASE_ERRORS
+                message = errors.get(code)
+            raise SynoError(code, message)

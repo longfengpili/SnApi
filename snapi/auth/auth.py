@@ -2,12 +2,13 @@
 # @Author: longfengpili
 # @Date:   2023-07-14 15:52:43
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-19 11:38:56
+# @Last Modified time: 2023-07-20 16:13:23
 
 
 import threading
 
 from snapi.snrequests import SnRequests
+from snapi.exceptions import AUTH_ERRORS
 
 
 class SynologyAuth(SnRequests):
@@ -29,6 +30,10 @@ class SynologyAuth(SnRequests):
                 if not cls._instance:
                     cls._instance = super().__new__(cls)
         return cls._instance
+
+    @property
+    def errors(self):
+        return AUTH_ERRORS
 
     @property
     def api_name(self):

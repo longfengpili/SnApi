@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 16:47:30
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 12:18:59
+# @Last Modified time: 2023-07-20 16:21:47
 
 
 from snapi.snrequests import SnRequests
@@ -33,7 +33,6 @@ class SnBaseApi(SnRequests):
 
     @property
     def apis(self):
-        '''https://ip:port/webapi/query.cgi?api=SYNO.API.Info&version=1&method=query&query=SYNO.MailClient.'''
         query = self.api_base or 'all'
         api_name = 'SYNO.API.Info'
         urlpath = 'entry.cgi'

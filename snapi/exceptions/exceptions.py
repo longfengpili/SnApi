@@ -1,52 +1,29 @@
-from .error_codes import ERROR_CODES, AUTH_ERROR_CODES, DOWNLOAD_STATION_ERROR_CODES, FILE_STATION_ERROR_CODES
-from .error_codes import VIRTUALIZATION_ERROR_CODES
+# -*- coding: utf-8 -*-
+# @Author: longfengpili
+# @Date:   2023-07-14 16:25:45
+# @Last Modified by:   longfengpili
+# @Last Modified time: 2023-07-20 16:12:05
 
 
 # Base exception:
-class SynoBaseException(Exception):
+class SynoError(Exception):
     """Base class for an exception. Defines error_message."""
 
-    def __init__(self, error_code: int, error_message: str):
-        super().__init__(error_code, error_message)
-        return
+    def __init__(self, code: int, message: str):
+        super().__init__(code, message)
 
 
-# Classes to reraise Exceptions from requests.
-class SynoConnectionError(SynoBaseException):
-    """Class to raise when a connection error occurs."""
+# # Classes for when we receive an error code in the JSON from the server.
+# class LoginError(SynoBaseException):
+#     """Class for an error during login."""
 
-    def __init__(self, error_code: int, error_message: str):
-        super().__init__(error_code, error_message)
-        return
-
-
-class HTTPError(SynoBaseException):
-    """Class to raise when a http error occurs."""
-
-    def __init__(self, error_code: int, error_message: str):
-        super().__init__(error_code, error_message)
-        return
-
-
-class JSONDecodeError(SynoBaseException):
-    """Class to raise when server fails to send JSON."""
-
-    def __init__(self, error_code: int, error_message: str):
-        super().__init__(error_code, error_message)
-        return
-
-
-# Classes for when we receive an error code in the JSON from the server.
-class LoginError(SynoBaseException):
-    """Class for an error during login."""
-
-    def __init__(self, error_code: int):
-        self.error_code: int = error_code
-        if error_code in ERROR_CODES.keys():
-            super().__init__(error_code, error_message=ERROR_CODES[error_code])
-        else:
-            super().__init__(error_code, error_message=AUTH_ERROR_CODES[error_code])
-        return
+#     def __init__(self, error_code: int):
+#         self.error_code: int = error_code
+#         if error_code in ERROR_CODES.keys():
+#             super().__init__(error_code, error_message=ERROR_CODES[error_code])
+#         else:
+#             super().__init__(error_code, error_message=AUTH_ERROR_CODES[error_code])
+#         return
 
 
 # class DownloadStationError(SynoBaseException):
