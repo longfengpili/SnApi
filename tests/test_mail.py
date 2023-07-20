@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
-# @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 17:32:26
+# @Last Modified by:   chunyang.xu
+# @Last Modified time: 2023-07-20 21:57:27
 
 import json
 import pytest
@@ -23,6 +23,10 @@ class TestMailClient:
     def teardown_method(self, method):
         pass
 
+    def data_dump(self, data: dict):
+        with open('./tests/mail.json', 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
     def test_filter(self):
         condition = '[{"name":"subject","value":"QQ OR 腾讯"}]'
         action = '[{"name":"move_to","value":"7"},{"name":"set_label","value":"6"}]'
@@ -30,10 +34,22 @@ class TestMailClient:
         print(snres_json)
 
     def test_spam_list(self):
-        snres_json = self.mailclient.get_spam_list()
-        with open('./tests/dustbin_list.json', 'w', encoding='utf-8') as f:
-            json.dump(snres_json, f, indent=2, ensure_ascii=False)
+        snres_json = self.mailclient.get_spams()
+        self.data_dump(snres_json)
 
     def test_spam_report(self):
         snres_json = self.mailclient.spam_report()
         print(snres_json)
+
+    def test_mailboxes(self):
+        snres_json = self.mailclient.get_mailboxes()
+        self.data_dump(snres_json)
+
+    def test_get_filters(self):
+        snres_json = self.mailclient.get_filters()
+        self.data_dump(snres_json)
+
+    # def test_get_mails(self):
+    #     id = [14222, 17107]
+    #     snres_json = self.mailclient.get_mails(id)
+    #     self.data_dump(snres_json)
