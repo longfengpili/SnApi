@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 16:47:30
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-19 11:43:22
+# @Last Modified time: 2023-07-20 12:18:59
 
 
 from snapi.snrequests import SnRequests
@@ -11,14 +11,19 @@ from snapi.auth import SynologyAuth
 
 class SnBaseApi(SnRequests):
 
-    def __init__(self, app: str, ip_address: str, port: str, username: str, password: str, otp_code: str = None):
-        self.app = app
+    def __init__(self, api_base: str, ip_address: str, port: str, username: str, password: str, otp_code: str = None):
+        self.api_base = api_base
         self.ip_address = ip_address
         self.port = port
         self.username = username
         self.password = password
         self.otp_code = otp_code
         super(SnBaseApi, self).__init__()
+
+    @property
+    def app(self):
+        app = self.api_base.split('.')[-2]
+        return app
 
     @property
     def sid(self):
@@ -28,15 +33,18 @@ class SnBaseApi(SnRequests):
 
     @property
     def apis(self):
+        '''https://ip:port/webapi/query.cgi?api=SYNO.API.Info&version=1&method=query&query=SYNO.MailClient.'''
+        query = self.api_base or 'all'
         api_name = 'SYNO.API.Info'
         urlpath = 'entry.cgi'
-        params = {'version': '1', 'method': 'query', 'query': 'all'}
+        params = {'version': '1', 'method': 'query', 'query': query}
         snres_json = self.sn_requests(urlpath, api_name, params)
         apis = snres_json['data']
         return apis
 
-    def sn_requests_with_sid(self, urlpath: str, api_name: str, params: str, method: str = 'get'):
-        snres_json = self.sn_requests(urlpath, api_name, params, sid=self.sid, method=method)
+    def snapi_requests(self, urlpath: str, api_name: str, params: str, method: str = 'get'):
+        sid = self.sid
+        snres_json = self.sn_requests(urlpath, api_name, params, sid=sid, method=method)
         return snres_json
 
     def get_api_info(self, api_name: str):

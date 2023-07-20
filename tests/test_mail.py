@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-18 11:32:53
+# @Last Modified time: 2023-07-20 12:18:02
 
 
 import pytest
@@ -19,7 +19,7 @@ class TestMailClient:
         port = PORT
         username = USERNAME
         password = PASSWORD
-        self.mailclient = MailClient('mail', ip_address, port, username, password)
+        self.mailclient = MailClient(ip_address, port, username, password)
 
     def teardown_method(self, method):
         pass

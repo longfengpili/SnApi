@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 17:12:49
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-19 11:38:34
+# @Last Modified time: 2023-07-20 10:20:36
 
 
 import requests
@@ -18,6 +18,7 @@ snrequestlogger = logging.getLogger('request')
 
 
 class SnRequests:
+    '''https://www.synology.cn/zh-cn/support/developer#tool'''
 
     def __init__(self, cert_verify: bool = False, dsm_version: int = 7):
         self.verify = cert_verify
