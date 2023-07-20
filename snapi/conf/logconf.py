@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:04:38
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-20 20:56:44
+# @Last Modified time: 2023-07-20 20:59:58
 
 
 import re
@@ -10,12 +10,10 @@ import os
 import sys
 import colorlog
 
-from .myhandlers import mklogdir
 
 # logging settings
 USERPATH = os.environ['USERPROFILE'] if 'USERPROFILE' in os.environ else os.environ['HOME'] if 'HOME' in os.environ else ''
 LOG_BASE_PATH = os.path.join(USERPATH, '.snapilog')  # 可以user目录下查看日志
-mklogdir(LOG_BASE_PATH)
 PROJECT_NAME = re.sub(':?\\\\', '_', os.getcwd())
 LOGGING_CONFIG = {
     'version': 1,  # 保留字
@@ -85,7 +83,7 @@ LOGGING_CONFIG = {
         },
         'api': {
             'level': 'INFO',
-            'class': 'logging.handlers.TimedRotatingFileHandler',  # 保存到文件，自动切
+            'class': 'snapi.conf.MakeFileHandler',  # 保存到文件，自动切
             'filename': os.path.join(LOG_BASE_PATH, f'{PROJECT_NAME}_api.log'),  # 日志文件
             'when': 'd',  # 每小时备份
             'interval': 1,
