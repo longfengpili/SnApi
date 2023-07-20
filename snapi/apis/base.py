@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 16:47:30
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 18:30:36
+# @Last Modified time: 2023-07-20 18:51:53
 
 import json
 
@@ -40,8 +40,7 @@ class SnBaseApi(SnRequests):
     def snapi_requests(self, api_name: str, params: str, method: str = 'get'):
         sid = self.sid
         api_info = self.get_api_info(api_name)
-        version = api_info.get('maxVersion')
-        urlpath = api_info.get('path')
+        urlpath, version = api_info.get('path'), api_info.get('maxVersion')
         params['version'] = version
         snres_json = self.sn_requests(urlpath, api_name, params, sid=sid, method=method)
         return snres_json

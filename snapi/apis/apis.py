@@ -2,13 +2,34 @@
 # @Author: longfengpili
 # @Date:   2023-07-20 17:40:35
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 18:30:29
+# @Last Modified time: 2023-07-20 18:51:33
 
 
 import os
 import json
 
 from snapi.snrequests import SnRequests
+
+import logging
+apilogger = logging.getLogger(__name__)
+
+
+class SnApiModel:
+
+    def __init__(self, name: str, version: str, path: str, **kwargs):
+        self.name = name
+        self.version = version
+        self.path = path
+
+    @staticmethod
+    def snapi_fdict(cls, api_name: str, api_info: dict):
+        otp = {k: v for k, v in api_info.items() if k not in ('maxVersion', 'path')}
+        version = api_info.get('maxVersion')
+        urlpath = api_info.get('path')
+        return cls(api_name, version, urlpath, kwargs=otp)
+
+    def __repr__(self):
+        return f"{self.name}[{self.version}]"
 
 
 class SnApi(SnRequests):
@@ -31,10 +52,15 @@ class SnApi(SnRequests):
         return apis
 
     def get_api_info(self, api_name: str):
+        apis = None
         with open(self.apifile, 'r', encoding='utf-8') as f:
-            apis = json.load(f)
+            try:
+                apis = json.load(f)
+            except json.decoder.JSONDecodeError as e:
+                apilogger.error(f"Load file[{self.apifile}] error, message: {e}")
 
-        if api_name not in apis:
+        if not apis or api_name not in apis:
+            os.remove(self.apifile)
             apis = self.get_apis()
         
         api_info = apis.get(api_name)
