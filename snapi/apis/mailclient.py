@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-21 17:21:54
+# @Last Modified time: 2023-07-21 17:29:48
 
 
 import json
@@ -69,7 +69,7 @@ class MailClient(SnBaseApi):
 
     def get_mails(self, id: list):
         api_name = 'SYNO.Entry.Request'
-        compound = [{"api": "SYNO.MailClient.Message", "method": "get", "id": id}]
+        compound = [{"api": "SYNO.MailClient.Message", "method": "get", "id": id, "additional": ["blockquote", "truncated"]}]
         compound = json.dumps(compound)
         params = {'method': 'request', 'stop_when_error': 'false', 'compound': compound}
         snres_json = self.snapi_requests(api_name, params, method='post')
