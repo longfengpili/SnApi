@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-21 17:20:38
+# @Last Modified time: 2023-07-21 17:21:54
 
 
 import json
@@ -24,10 +24,8 @@ class MailClient(SnBaseApi):
         return snres_json
 
     def get_maillabels(self):
-        api_name = 'SYNO.Entry.Request'
-        compound = [{"api": "SYNO.MailClient.Label", "method": "list", "conversation_view": "false"}]
-        compound = self.convert_to_json(compound)
-        params = {'method': 'request', 'compound': compound, 'conversation_view': 'false'}
+        api_name = 'SYNO.MailClient.Label'
+        params = {'method': 'list', 'conversation_view': 'false'}
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
