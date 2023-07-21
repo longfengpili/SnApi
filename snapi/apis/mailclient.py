@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-21 17:02:19
+# @Last Modified time: 2023-07-21 17:20:38
 
 
 import json
@@ -17,10 +17,9 @@ class MailClient(SnBaseApi):
         super(MailClient, self).__init__(self.app, ip_address, port, username, password, otp_code)
 
     def get_mailboxes(self):
-        api_name = 'SYNO.Entry.Request'
-        compound = [{"api": "SYNO.MailClient.Mailbox", "method": "list", "conversation_view": "false"}]
-        compound = self.convert_to_json(compound)
-        params = {'method': 'request', 'compound': compound, 'conversation_view': 'false'}
+        api_name = 'SYNO.MailClient.Mailbox'
+        params = {'method': 'list', 'conversation_view': 'false', 'subscription': 'false', 
+                  'additional': ["unread_count", "draft_total_count"]}
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
