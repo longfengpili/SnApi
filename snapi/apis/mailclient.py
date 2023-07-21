@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
-# @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-20 21:56:41
+# @Last Modified by:   longfengpili
+# @Last Modified time: 2023-07-21 11:45:41
+
+
+import json
 
 from .base import SnBaseApi
 
@@ -20,17 +23,34 @@ class MailClient(SnBaseApi):
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
-    def filter(self, condition: str, action: str):
-        api_name = 'SYNO.MailClient.Filter'
-        params = {'method': 'set', 'condition': condition, 'action': action, 'id': '13'}
-        snres_json = self.snapi_requests(api_name, params, method='post')
-        return snres_json
-
     def get_filters(self):
         api_name = 'SYNO.MailClient.Filter'
         params = {'method': 'list'}
         snres_json = self.snapi_requests(api_name, params, method='post')
-        return snres_json
+        filters = snres_json.get('data').get('filter')
+        return filters
+
+    def filter(self, condition: str, action: str):
+        def convert_actions(actions):
+            act = []
+            for _act in actions:
+                _act = {f"{k}": f"{v}" for k, v in _act.items()}
+                act.append(_act)
+            act = json.dumps(act, ensure_ascii=False)
+            return act
+
+        results = {}
+        api_name = 'SYNO.MailClient.Filter'
+        filters = self.get_filters()
+        for f in filters:
+            enabled, condition, action, idx = f.get('enabled'), f.get('condition'), f.get('action'), f.get('id')
+            condition = json.dumps(condition, ensure_ascii=False)
+            action = convert_actions(action)
+            if enabled:
+                params = {'method': 'set', 'condition': f'{condition}', 'action': f'{action}', 'id': idx}
+                snres_json = self.snapi_requests(api_name, params, method='post')
+                results[idx] = {'result': snres_json, 'condition': condition, 'action': action}
+        return results
 
     def get_spams(self):
         api_name = 'SYNO.MailClient.Thread'
