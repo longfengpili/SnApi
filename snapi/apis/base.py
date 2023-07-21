@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 16:47:30
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 18:51:53
+# @Last Modified time: 2023-07-21 17:01:49
 
 import json
 
@@ -44,3 +44,24 @@ class SnBaseApi(SnRequests):
         params['version'] = version
         snres_json = self.sn_requests(urlpath, api_name, params, sid=sid, method=method)
         return snres_json
+
+    def convert_to_json(self, data: any):
+        def to_str(value):
+            if isinstance(value, bool):
+                return value
+            if isinstance(value, int):
+                return str(value)
+            
+            return value
+
+        if isinstance(data, list):
+            datas = []
+            for d in data:
+                d = {k: to_str(v) for k, v in d.items()}
+                datas.append(d)
+        elif isinstance(data, dict):
+            datas = {k: to_str(v) for k, v in data.items()}
+        else:
+            datas = data
+        datas = json.dumps(datas, ensure_ascii=False)
+        return datas

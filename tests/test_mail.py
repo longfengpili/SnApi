@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
-# @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-20 21:57:27
+# @Last Modified by:   longfengpili
+# @Last Modified time: 2023-07-21 15:56:49
 
 import json
 import pytest
@@ -28,9 +28,7 @@ class TestMailClient:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
     def test_filter(self):
-        condition = '[{"name":"subject","value":"QQ OR 腾讯"}]'
-        action = '[{"name":"move_to","value":"7"},{"name":"set_label","value":"6"}]'
-        snres_json = self.mailclient.filter(condition, action)
+        snres_json = self.mailclient.filter()
         print(snres_json)
 
     def test_spam_list(self):
@@ -45,11 +43,15 @@ class TestMailClient:
         snres_json = self.mailclient.get_mailboxes()
         self.data_dump(snres_json)
 
+    def test_maillabels(self):
+        snres_json = self.mailclient.get_maillabels()
+        self.data_dump(snres_json)
+
     def test_get_filters(self):
         snres_json = self.mailclient.get_filters()
         self.data_dump(snres_json)
 
-    # def test_get_mails(self):
-    #     id = [14222, 17107]
-    #     snres_json = self.mailclient.get_mails(id)
-    #     self.data_dump(snres_json)
+    def test_get_mails(self):
+        id = [49473, 49470]
+        snres_json = self.mailclient.get_mails(id)
+        self.data_dump(snres_json)
