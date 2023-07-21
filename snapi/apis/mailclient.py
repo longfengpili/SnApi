@@ -2,12 +2,16 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-21 17:29:48
+# @Last Modified time: 2023-07-21 18:15:36
 
 
+import os
 import json
 
 from .base import SnBaseApi
+
+import logging
+maillogger = logging.getLogger(__name__)
 
 
 class MailClient(SnBaseApi):
@@ -15,13 +19,35 @@ class MailClient(SnBaseApi):
     def __init__(self, ip_address: str, port: str, username: str, password: str, otp_code: str = None):
         self.app = 'MailClient'
         super(MailClient, self).__init__(self.app, ip_address, port, username, password, otp_code)
+        self.mailboxfile = os.path.join(os.getcwd(), 'snapi/conf/mailbox.json')
 
     def get_mailboxes(self):
         api_name = 'SYNO.MailClient.Mailbox'
         params = {'method': 'list', 'conversation_view': 'false', 'subscription': 'false', 
                   'additional': ["unread_count", "draft_total_count"]}
         snres_json = self.snapi_requests(api_name, params, method='post')
-        return snres_json
+        mailboxes = snres_json.get('data').get('mailbox')
+
+        with open(self.mailboxfile, 'w', encoding='utf-8') as f:
+            json.dump(mailboxes, f, indent=2, ensure_ascii=False)
+
+        return mailboxes
+
+    def get_mailbox_info(self, mailbox: str):
+        mailboxes = None
+        with open(self.mailboxfile, 'r', encoding='utf-8') as f:
+            try:
+                mailboxes = json.load(f)
+            except json.decoder.JSONDecodeError as e:
+                maillogger.error(f"Load file[{self.mailboxfile}] error, message: {e}")
+
+        mailboxes = [mbox for mbox in mailboxes if mbox.get('path') == mailbox]
+        if not mailboxes:
+            os.remove(self.mailboxfile)
+            mailboxes = self.get_mailboxes()
+    
+        mailboxes = [mbox for mbox in mailboxes if mbox.get('path') == mailbox]
+        return mailboxes
 
     def get_maillabels(self):
         api_name = 'SYNO.MailClient.Label'
@@ -50,24 +76,41 @@ class MailClient(SnBaseApi):
                 results[idx] = {'result': snres_json, 'condition': condition, 'action': action}
         return results
 
-    def get_spams(self):
+    def get_mails(self, mailbox: str = 'INBOX'):
         api_name = 'SYNO.MailClient.Thread'
-        condition = [{"name": "mailbox", "value": "-5"}]
+        mailboxes = self.get_mailbox_info(mailbox)
+        mailbox_id = mailboxes[0].get('id')
+        condition = [{"name": "mailbox", "value": f"{mailbox_id}"}]
         condition = self.convert_to_json(condition)
         params = {'method': 'list', 'offset': '0', 'limit': '200', 'condition': condition, 'conversation_view': 'false'}
         snres_json = self.snapi_requests(api_name, params, method='post')
-        spam_list = snres_json.get('data').get('matched_ids')
-        return spam_list
+        return snres_json
+
+    # def move_mails(self, fmailbox: str, tmailbox: str, id: list):
+
+
+
+
+    # api: SYNO.MailClient.Thread
+    # method: set_mailbox
+    # version: 10
+    # id: [47677,47666]
+    # mailbox_id: -6
+    # operate_mailbox_id: -1
+    # conversation_view: false
+
+
 
     def spam_report(self):
         api_name = 'SYNO.MailClient.Thread'
-        spam_list = self.get_spams()
+        res_json = self.get_mails(mailbox='Junk')
+        spams = res_json.get('data').get('matched_ids')
         params = {'method': 'report_spam', 'is_spam': 'false', 
-                  'id': f'{spam_list}', 'conversation_view': 'false'}
+                  'id': f'{spams}', 'conversation_view': 'false'}
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
-    def get_mails(self, id: list):
+    def get_mail_info(self, id: list):
         api_name = 'SYNO.Entry.Request'
         compound = [{"api": "SYNO.MailClient.Message", "method": "get", "id": id, "additional": ["blockquote", "truncated"]}]
         compound = json.dumps(compound)
