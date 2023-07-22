@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 10:34:16
+# @Last Modified time: 2023-07-22 10:53:05
 
 
 import os
@@ -20,8 +20,8 @@ class MailClient(SnBaseApi):
     def __init__(self, ip_address: str, port: str, username: str, password: str, otp_code: str = None):
         self.app = 'MailClient'
         super(MailClient, self).__init__(self.app, ip_address, port, username, password, otp_code)
+        self.update_mailbox_api = UpdateApi()
         self.mailboxfile = os.path.join(os.getcwd(), 'snapi/conf/mailbox/mailbox.json')
-        self.update_mailbox_api = UpdateApi(self.mailboxfile)
 
     def get_mailboxes(self):
         api_name = 'SYNO.MailClient.Mailbox'
@@ -29,11 +29,11 @@ class MailClient(SnBaseApi):
                   'additional': ["unread_count", "draft_total_count"]}
         snres_json = self.snapi_requests(api_name, params, method='post')
         mailboxes = snres_json.get('data').get('mailbox')
-        self.update_mailbox_api.dump(mailboxes)
+        self.update_mailbox_api.dump(self.mailboxfile, mailboxes)
         return mailboxes
 
     def get_mailbox_info(self, mailbox: str):
-        mailboxes = self.update_mailbox_api.load()
+        mailboxes = self.update_mailbox_api.load(self.mailboxfile)
         if not mailboxes:
             os.remove(self.mailboxfile)
             mailboxes = self.get_mailboxes()
