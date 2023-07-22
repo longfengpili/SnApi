@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 12:45:59
+# @Last Modified time: 2023-07-22 13:58:16
 
 import json
 import pytest
@@ -29,7 +29,7 @@ class TestMailClient:
 
     def test_filter(self):
         snres_json = self.mailclient.filter()
-        print(snres_json)
+        self.data_dump(snres_json)
 
     def test_get_mails(self):
         snres_json = self.mailclient.get_mails(mailbox_id=-1)
@@ -38,7 +38,7 @@ class TestMailClient:
 
     def test_spam_report(self):
         snres_json = self.mailclient.spam_report()
-        print(snres_json)
+        self.data_dump(snres_json)
 
     def test_mailboxes(self):
         snres_json = self.mailclient.get_mailboxes()
