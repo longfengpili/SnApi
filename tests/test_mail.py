@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 14:41:32
+# @Last Modified time: 2023-07-22 15:18:44
 
 import json
 import pytest
@@ -43,12 +43,15 @@ class TestMailClient:
         self.data_dump(snres_json)
 
     def test_get_mails(self):
-        snres_json = self.mailclient.get_mails(mailbox_id=-1)
-        snres_json = snres_json.get('data').get('thread')
-        self.data_dump(snres_json)
+        mails = self.mailclient.get_mails(mailbox_id=-1, offset=0, limit=1000)
+        self.data_dump(mails)
 
     def test_spam_report(self):
         snres_json = self.mailclient.spam_report()
+        self.data_dump(snres_json)
+
+    def test_spam_action(self):
+        snres_json = self.mailclient.spam_action()
         self.data_dump(snres_json)
 
     def test_mailboxes(self):

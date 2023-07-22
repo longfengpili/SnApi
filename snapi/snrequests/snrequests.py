@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: longfengpili
 # @Date:   2023-07-17 17:12:49
-# @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 16:42:46
+# @Last Modified by:   chunyang.xu
+# @Last Modified time: 2023-07-22 16:01:39
 
 
 import requests
@@ -13,7 +13,7 @@ from snapi.exceptions import BASE_ERRORS
 from snapi.exceptions import SynoError
 
 import logging
-snrequestlogger = logging.getLogger('request')
+snrequestlogger = logging.getLogger(__name__)
 
 
 class SnRequests:

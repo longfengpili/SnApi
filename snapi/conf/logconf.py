@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:04:38
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-20 20:59:58
+# @Last Modified time: 2023-07-22 16:00:36
 
 
 import re
@@ -71,10 +71,10 @@ LOGGING_CONFIG = {
             'formatter': 'standard',
             'encoding': 'utf-8',
         },
-        'request': {
+        'snrequests': {
             'level': 'INFO',
             'class': 'snapi.conf.MakeFileHandler',  # 保存到文件，自动切
-            'filename': os.path.join(LOG_BASE_PATH, f'{PROJECT_NAME}_request.log'),  # 日志文件
+            'filename': os.path.join(LOG_BASE_PATH, f'{PROJECT_NAME}_snrequests.log'),  # 日志文件
             'when': 'd',  # 每小时备份
             'interval': 1,
             'backupCount': 30,
@@ -99,8 +99,8 @@ LOGGING_CONFIG = {
             'level': 'INFO',
             'propagate': True,  # 向不向更高级别的logger传递
         },
-        'request': {
-            'handlers': ['console', 'request'],
+        'snapi.snrequests': {
+            'handlers': ['console', 'snrequests'],
             'level': 'DEBUG',
             'propagate': False,  # 向不向更高级别的logger传递
         },
