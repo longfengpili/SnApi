@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 21:13:04
+# @Last Modified time: 2023-07-22 21:24:32
 
 import json
 import pytest
@@ -27,6 +27,18 @@ class TestMailClient:
         with open('./tests/mail.json', 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
+    def test_mailboxes(self):
+        snres_json = self.mailclient.get_mailboxes()
+        self.data_dump(snres_json)
+
+    def test_get_mailbox_info(self):
+        snres_json = self.mailclient.get_mailbox_info(mailbox_name='Trash')
+        self.data_dump(snres_json)
+
+    def test_maillabels_api(self):
+        snres_json = self.mailclient.get_maillabels_api()
+        self.data_dump(snres_json)
+
     def test_get_filters(self):
         snres_json = self.mailclient.get_filters()
         self.data_dump(snres_json)
@@ -50,27 +62,15 @@ class TestMailClient:
         snres_json = self.mailclient.spam_report()
         self.data_dump(snres_json)
 
+    def test_drop_dumplicate_mails(self):
+        drop_mails = self.mailclient.drop_dumplicate_mails()
+        self.data_dump(drop_mails)
+
     def test_spam_action(self):
         snres_json = self.mailclient.spam_action()
         self.data_dump(snres_json)
 
-    def test_mailboxes(self):
-        snres_json = self.mailclient.get_mailboxes()
-        self.data_dump(snres_json)
-
-    def test_get_mailbox_info(self):
-        snres_json = self.mailclient.get_mailbox_info(mailbox_name='Trash')
-        self.data_dump(snres_json)
-
-    def test_maillabels_api(self):
-        snres_json = self.mailclient.get_maillabels_api()
-        self.data_dump(snres_json)
-
     def test_get_mail_info(self):
-        id = [49473, 49470]
+        id = [49891, 49589]
         snres_json = self.mailclient.get_mail_info(id)
         self.data_dump(snres_json)
-
-    def test_drop_dumplicate_mails(self):
-        drop_mails = self.mailclient.drop_dumplicate_mails()
-        self.data_dump(drop_mails)
