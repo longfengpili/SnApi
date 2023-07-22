@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # @Author: longfengpili
 # @Date:   2023-07-20 17:40:35
-# @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-20 18:51:33
+# @Last Modified by:   chunyang.xu
+# @Last Modified time: 2023-07-22 10:18:12
 
 
 import os
-import json
 
 from snapi.snrequests import SnRequests
+from snapi.conf import UpdateApi
 
 import logging
 apilogger = logging.getLogger(__name__)
@@ -35,10 +35,11 @@ class SnApiModel:
 class SnApi(SnRequests):
 
     def __init__(self, ip_address: str, port: str):
-        self.apifile = os.path.join(os.getcwd(), 'snapi/conf/apis.json')
         self.ip_address = ip_address
         self.port = port
         super(SnApi, self).__init__()
+        self.apifile = os.path.join(os.getcwd(), 'snapi/conf/apis.json')
+        self.updateapi = UpdateApi(self.apifile)
 
     def get_apis(self):
         api_name = 'SYNO.API.Info'
@@ -46,19 +47,11 @@ class SnApi(SnRequests):
         params = {'version': '1', 'method': 'query', 'query': 'all'}
         snres_json = self.sn_requests(urlpath, api_name, params)
         apis = snres_json['data']
-
-        with open(self.apifile, 'w', encoding='utf-8') as f:
-            json.dump(apis, f, indent=2, ensure_ascii=False)
+        self.updateapi.dump(apis)
         return apis
 
     def get_api_info(self, api_name: str):
-        apis = None
-        with open(self.apifile, 'r', encoding='utf-8') as f:
-            try:
-                apis = json.load(f)
-            except json.decoder.JSONDecodeError as e:
-                apilogger.error(f"Load file[{self.apifile}] error, message: {e}")
-
+        apis = self.updateapi.load()
         if not apis or api_name not in apis:
             os.remove(self.apifile)
             apis = self.get_apis()
