@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 18:13:19
+# @Last Modified time: 2023-07-22 20:56:25
 
 
 import os
@@ -39,16 +39,17 @@ class MailClient(SnBaseApi):
 
         return mailboxes
 
-    def get_mailbox_info(self, mailbox: str = None, mailbox_id: int = None):
+    def get_mailbox_info(self, mailbox_name: str = None, mailbox_id: int = None):
         mailboxes = self.get_mailboxes()
-        
-        if mailbox:
-            mailboxes = [mbox for mbox in mailboxes if mbox.get('path') == mailbox]
-        elif mailbox_id:
-            mailboxes = [mbox for mbox in mailboxes if mbox.get('id') == mailbox_id]
-        else:
-            pass
-        return mailboxes
+
+        for mailbox in mailboxes:
+            _mailbox_name, _mailbox_id = mailbox.get('path'), mailbox.get('id')
+            if _mailbox_name == mailbox_name:
+                break
+            if _mailbox_id == mailbox_id:
+                break
+
+        return mailbox
 
     def get_maillabels_api(self):
         api_name = 'SYNO.MailClient.Label'
@@ -107,15 +108,15 @@ class MailClient(SnBaseApi):
             _ids = snres_json.get('data').get('matched_ids')
 
         counts = len(mails)
-        mailboxes = self.get_mailbox_info(mailbox_id=mailbox_id)
-        mailbox_name = mailboxes[0].get('path')
+        mailbox = self.get_mailbox_info(mailbox_id=mailbox_id)
+        mailbox_name = mailbox.get('path')
         maillogger.info(f"[{mailbox_name}]has email {counts} counts ! ")
         return ids, mails
 
     def spam_report(self):
         api_name = 'SYNO.MailClient.Thread'
-        mailboxes = self.get_mailbox_info(mailbox='Junk')
-        mailbox_id = mailboxes[0].get('id')
+        mailbox = self.get_mailbox_info(mailbox_name='Junk')
+        mailbox_id = mailbox.get('id')
         ids, mails = self.get_mails(mailbox_id)
         params = {'method': 'report_spam', 'is_spam': 'false', 'operate_mailbox_id': mailbox_id,
                   'id': f'{ids}', 'conversation_view': 'false'}
