@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 15:51:34
+# @Last Modified time: 2023-07-22 16:36:20
 
 
 import os
@@ -23,7 +23,7 @@ class MailClient(SnBaseApi):
         self.update_mailbox_api = UpdateApi()
         self.mailboxfile = os.path.join(os.getcwd(), 'snapi/conf/mailbox/mailbox.json')
 
-    def get_mailboxes(self):
+    def get_mailboxes_api(self):
         api_name = 'SYNO.MailClient.Mailbox'
         params = {'method': 'list', 'conversation_view': 'false', 'subscription': 'false', 
                   'additional': ["unread_count", "draft_total_count"]}
@@ -32,11 +32,15 @@ class MailClient(SnBaseApi):
         self.update_mailbox_api.dump(self.mailboxfile, mailboxes)
         return mailboxes
 
-    def get_mailboxes_info(self, mailbox: str = None, mailbox_id: int = None):
+    def get_mailboxes(self):
         mailboxes = self.update_mailbox_api.load(self.mailboxfile)
         if not mailboxes:
-            os.remove(self.mailboxfile)
-            mailboxes = self.get_mailboxes()
+            mailboxes = self.get_mailboxes_api()
+
+        return mailboxes
+
+    def get_mailbox_info(self, mailbox: str = None, mailbox_id: int = None):
+        mailboxes = self.get_mailboxes()
         
         if mailbox:
             mailboxes = [mbox for mbox in mailboxes if mbox.get('path') == mailbox]
@@ -46,7 +50,7 @@ class MailClient(SnBaseApi):
             pass
         return mailboxes
 
-    def get_maillabels(self):
+    def get_maillabels_api(self):
         api_name = 'SYNO.MailClient.Label'
         params = {'method': 'list', 'conversation_view': 'false', 'additional': ["unread_count"]}
         snres_json = self.snapi_requests(api_name, params, method='post')
@@ -103,14 +107,14 @@ class MailClient(SnBaseApi):
             _ids = snres_json.get('data').get('matched_ids')
 
         counts = len(mails)
-        mailboxes = self.get_mailboxes_info(mailbox_id=mailbox_id)
+        mailboxes = self.get_mailbox_info(mailbox_id=mailbox_id)
         mailbox_name = mailboxes[0].get('path')
         maillogger.info(f"[{mailbox_name}]Get email {counts} counts ! ")
         return ids, mails
 
     def spam_report(self):
         api_name = 'SYNO.MailClient.Thread'
-        mailboxes = self.get_mailboxes_info(mailbox='Junk')
+        mailboxes = self.get_mailbox_info(mailbox='Junk')
         mailbox_id = mailboxes[0].get('id')
         ids, mails = self.get_mails(mailbox_id)
         params = {'method': 'report_spam', 'is_spam': 'false', 
@@ -128,7 +132,7 @@ class MailClient(SnBaseApi):
 
     def drop_dumplicate_mails(self):
         drop_mails = {}
-        mailboxes = self.get_mailboxes_info()
+        mailboxes = self.get_mailboxes()
 
         for mailbox in mailboxes:
             ids = []
