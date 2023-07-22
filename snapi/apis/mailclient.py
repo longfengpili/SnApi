@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 16:36:20
+# @Last Modified time: 2023-07-22 18:13:19
 
 
 import os
@@ -109,7 +109,7 @@ class MailClient(SnBaseApi):
         counts = len(mails)
         mailboxes = self.get_mailbox_info(mailbox_id=mailbox_id)
         mailbox_name = mailboxes[0].get('path')
-        maillogger.info(f"[{mailbox_name}]Get email {counts} counts ! ")
+        maillogger.info(f"[{mailbox_name}]has email {counts} counts ! ")
         return ids, mails
 
     def spam_report(self):
@@ -117,7 +117,7 @@ class MailClient(SnBaseApi):
         mailboxes = self.get_mailbox_info(mailbox='Junk')
         mailbox_id = mailboxes[0].get('id')
         ids, mails = self.get_mails(mailbox_id)
-        params = {'method': 'report_spam', 'is_spam': 'false', 
+        params = {'method': 'report_spam', 'is_spam': 'false', 'operate_mailbox_id': mailbox_id,
                   'id': f'{ids}', 'conversation_view': 'false'}
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
