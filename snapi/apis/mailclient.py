@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 20:56:25
+# @Last Modified time: 2023-07-22 21:12:24
 
 
 import os
@@ -48,6 +48,10 @@ class MailClient(SnBaseApi):
                 break
             if _mailbox_id == mailbox_id:
                 break
+        else:
+            mailboxes_all = [(mbox.get('id'), mbox.get('path')) for mbox in mailboxes]
+            nonexist = f"[mailbox_name]::{mailbox_name}" if mailbox_name else f"[mailbox_id]::{mailbox_id}"
+            raise ValueError(f"Only find {mailboxes_all}, {nonexist} not exist !!! ")
 
         return mailbox
 
