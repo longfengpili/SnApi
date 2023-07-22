@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 21:12:24
+# @Last Modified time: 2023-07-22 21:50:53
 
 
 import os
@@ -135,34 +135,36 @@ class MailClient(SnBaseApi):
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
-    def drop_dumplicate_mails(self):
+    def drop_dumplicate_mails(self, fmailbox_name: str = None):
+        def parse_mail(mail: dict):
+            idx, message = mail.get('id'), mail.get('message')[0]
+            subject, arrivaltime, bodypreview = message.get('subject'), message.get('arrival_time'), message.get('body_preview')
+            subject = f"[{arrivaltime}]{subject}"
+            return idx, subject, bodypreview
+
         drop_mails = {}
         mailboxes = self.get_mailboxes()
 
         for mailbox in mailboxes:
-            ids = []
-            subjects = []
-            b_subject, b_bodypreview = None, None
+            ids, subjects = [], []
             mailbox_name, mailbox_id = mailbox.get('path'), mailbox.get('id')
+
             if mailbox_name in ('Trash', 'Junk'):  # 跳过垃圾桶、垃圾邮件
                 continue
-
-            # if mailbox_name != 'QQ':
-            #     continue
+            if fmailbox_name and mailbox_name != fmailbox_name:
+                continue
 
             _ids, mails = self.get_mails(mailbox_id, limit=1000)
-            for mail in mails:
-                _idx, message = mail.get('id'), mail.get('message')[0]
-                _subject, _arrivaltime = message.get('subject'), message.get('arrival_time')
-                _subject = f"[{_arrivaltime}]{_subject}"
-                _bodypreview = message.get('body_preview')
+            mails_combine = zip(mails[:-1], mails[1:])
+            for mails in mails_combine:
+                f_mail, s_mail = mails
+                f_idx, f_subject, f_bodypreview = parse_mail(f_mail)
+                s_idx, s_subject, s_bodypreview = parse_mail(s_mail) 
 
-                if _subject == b_subject and _bodypreview == b_bodypreview:
-                    maillogger.warning(f"[{mailbox_name}::{_idx}] duplicate, will be deleted !!! subject: {_subject}")
-                    ids.append(_idx)
-                    subjects.append(_subject)
-
-                b_subject, b_bodypreview = _subject, _bodypreview
+                if f_subject == s_subject and f_bodypreview == s_bodypreview:
+                    maillogger.warning(f"[{mailbox_name}::{s_idx}] duplicate, will be deleted !!! subject: {s_subject}")
+                    ids.append(s_idx)
+                    subjects.append(s_subject)
 
             if ids:
                 self.move_mails(fmailbox_id=mailbox_id, tmailbox_id=-6, ids=ids)
