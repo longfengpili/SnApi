@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 13:58:16
+# @Last Modified time: 2023-07-22 14:41:32
 
 import json
 import pytest
@@ -27,6 +27,17 @@ class TestMailClient:
         with open('./tests/mail.json', 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
+    def test_get_filters(self):
+        snres_json = self.mailclient.get_filters()
+        self.data_dump(snres_json)
+
+    def test_filter_act(self):
+        condition = [{"name": "to", "value": "398745129@qq.com"}]
+        action = [{"name": "move_to", "value": "7"}, {"name": "set_label", "value": "6"}]
+        idx = 15
+        snres_json = self.mailclient.filter_act(condition, action, idx)
+        self.data_dump(snres_json)
+
     def test_filter(self):
         snres_json = self.mailclient.filter()
         self.data_dump(snres_json)
@@ -46,10 +57,6 @@ class TestMailClient:
 
     def test_maillabels(self):
         snres_json = self.mailclient.get_maillabels()
-        self.data_dump(snres_json)
-
-    def test_get_filters(self):
-        snres_json = self.mailclient.get_filters()
         self.data_dump(snres_json)
 
     def test_get_mail_info(self):

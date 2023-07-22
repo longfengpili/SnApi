@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 13:08:52
+# @Last Modified time: 2023-07-22 14:47:44
 
 
 import os
@@ -55,17 +55,26 @@ class MailClient(SnBaseApi):
         filters = snres_json.get('data').get('filter')
         return filters
 
+    def filter_act(self, condition: dict, action: dict, idx: int):
+        api_name = 'SYNO.MailClient.Filter'
+        condition = self.convert_to_json(condition)
+        action = self.convert_to_json(action)
+        params = {'method': 'set', 'condition': condition, 'action': action, 'id': idx, 
+                  'conversation_view': 'false', 'apply_exist': 'true'}
+        snres_json = self.snapi_requests(api_name, params, method='post')
+        return snres_json
+
     def filter(self):
         results = {}
-        api_name = 'SYNO.MailClient.Filter'
         filters = self.get_filters()
         for f in filters:
             enabled, condition, action, idx = f.get('enabled'), f.get('condition'), f.get('action'), f.get('id')
-            condition = self.convert_to_json(condition)
-            action = self.convert_to_json(action)
+
+            # if idx != 15:
+            #     continue
+
             if enabled:
-                params = {'method': 'set', 'condition': condition, 'action': action, 'id': idx}
-                snres_json = self.snapi_requests(api_name, params, method='post')
+                snres_json = self.filter_act(condition, action, idx)
                 results[idx] = {'result': snres_json, 'condition': condition, 'action': action}
         return results
 
