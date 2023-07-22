@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 21:50:53
+# @Last Modified time: 2023-07-22 22:28:34
 
 
 import os
@@ -122,9 +122,11 @@ class MailClient(SnBaseApi):
         mailbox = self.get_mailbox_info(mailbox_name='Junk')
         mailbox_id = mailbox.get('id')
         ids, mails = self.get_mails(mailbox_id)
+        subjects = [mail.get('message')[0].get('subject') for mail in mails]
         params = {'method': 'report_spam', 'is_spam': 'false', 'operate_mailbox_id': mailbox_id,
                   'id': f'{ids}', 'conversation_view': 'false'}
         snres_json = self.snapi_requests(api_name, params, method='post')
+        snres_json['info'] = tuple(zip(ids, subjects))
         return snres_json
 
     def move_mails(self, fmailbox_id: int, tmailbox_id: int, ids: list):

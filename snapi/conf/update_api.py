@@ -2,7 +2,7 @@
 # @Author: chunyang.xu
 # @Date:   2023-07-22 09:54:04
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 16:34:02
+# @Last Modified time: 2023-07-22 22:21:13
 
 
 import os
@@ -22,7 +22,7 @@ class UpdateApi:
         #     os.remove(apifile)
 
         with open(apifile, 'w', encoding='utf-8') as f:
-            json.dump(apis, f, indent=2, ensure_ascii=False)
+            json.dump(apis, f, indent=4, ensure_ascii=False)
 
     def load(self, apifile):
         if not os.path.exists(apifile):

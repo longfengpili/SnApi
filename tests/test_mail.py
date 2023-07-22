@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 21:37:52
+# @Last Modified time: 2023-07-22 22:20:47
 
 import json
 import pytest
@@ -25,7 +25,7 @@ class TestMailClient:
 
     def data_dump(self, data: dict):
         with open('./tests/mail.json', 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+            json.dump(data, f, indent=4, ensure_ascii=False)
 
     def test_mailboxes(self):
         snres_json = self.mailclient.get_mailboxes()
