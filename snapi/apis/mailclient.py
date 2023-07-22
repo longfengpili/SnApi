@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 10:53:05
+# @Last Modified time: 2023-07-22 13:08:52
 
 
 import os
@@ -32,18 +32,19 @@ class MailClient(SnBaseApi):
         self.update_mailbox_api.dump(self.mailboxfile, mailboxes)
         return mailboxes
 
-    def get_mailbox_info(self, mailbox: str):
+    def get_mailboxex_info(self, mailbox: str = None):
         mailboxes = self.update_mailbox_api.load(self.mailboxfile)
         if not mailboxes:
             os.remove(self.mailboxfile)
             mailboxes = self.get_mailboxes()
-    
-        mailboxes = [mbox for mbox in mailboxes if mbox.get('path') == mailbox]
+        
+        if mailbox:
+            mailboxes = [mbox for mbox in mailboxes if mbox.get('path') == mailbox]
         return mailboxes
 
     def get_maillabels(self):
         api_name = 'SYNO.MailClient.Label'
-        params = {'method': 'list', 'conversation_view': 'false'}
+        params = {'method': 'list', 'conversation_view': 'false', 'additional': ["unread_count"]}
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
@@ -68,43 +69,70 @@ class MailClient(SnBaseApi):
                 results[idx] = {'result': snres_json, 'condition': condition, 'action': action}
         return results
 
-    def get_mails(self, mailbox: str = 'INBOX'):
+    def get_mails(self, mailbox_id: int = -1, limit: int = 200):
         api_name = 'SYNO.MailClient.Thread'
-        mailboxes = self.get_mailbox_info(mailbox)
-        mailbox_id = mailboxes[0].get('id')
         condition = [{"name": "mailbox", "value": f"{mailbox_id}"}]
         condition = self.convert_to_json(condition)
-        params = {'method': 'list', 'offset': '0', 'limit': '200', 'condition': condition, 'conversation_view': 'false'}
+        params = {'method': 'list', 'offset': '0', 'limit': f'{limit}', 'condition': condition, 'conversation_view': 'false'}
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
-    # def move_mails(self, fmailbox: str, tmailbox: str, id: list):
-
-
-
-
-    # api: SYNO.MailClient.Thread
-    # method: set_mailbox
-    # version: 10
-    # id: [47677,47666]
-    # mailbox_id: -6
-    # operate_mailbox_id: -1
-    # conversation_view: false
-
-
-
     def spam_report(self):
         api_name = 'SYNO.MailClient.Thread'
-        res_json = self.get_mails(mailbox='Junk')
+        mailboxes = self.get_mailboxex_info(mailbox='Junk')
+        mailbox_id = mailboxes[0].get('id')
+        res_json = self.get_mails(mailbox_id)
         spams = res_json.get('data').get('matched_ids')
         params = {'method': 'report_spam', 'is_spam': 'false', 
                   'id': f'{spams}', 'conversation_view': 'false'}
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
-    def get_mail_info(self, id: list):
+    def move_mails(self, fmailbox_id: int, tmailbox_id: int, ids: list):
+        api_name = 'SYNO.MailClient.Thread'
+        params = {'method': 'set_mailbox', 'id': f"{ids}", 'operate_mailbox_id': f"{fmailbox_id}",  'mailbox_id': f"{tmailbox_id}",
+                  'conversation_view': 'false'}
+
+        snres_json = self.snapi_requests(api_name, params, method='post')
+        return snres_json
+
+    def drop_dumplicate_mails(self):
+        drop_mails = {}
+        mailboxes = self.get_mailboxex_info()
+
+        for mailbox in mailboxes:
+            ids = []
+            subjects = []
+            b_subject, b_bodypreview = None, None
+            name, idx = mailbox.get('path'), mailbox.get('id')
+            if name in ('Trash', 'Junk'):  # 跳过垃圾桶、垃圾邮件
+                continue
+
+            res_json = self.get_mails(idx, limit=20000)
+            threads = res_json.get('data').get('thread')
+            for thread in threads:
+                # print(thread)
+                _idx, message = thread.get('id'), thread.get('message')[0]
+                _subject, _arrivaltime = message.get('subject'), message.get('arrival_time')
+                _subject = f"[{_arrivaltime}]{_subject}"
+                _bodypreview = message.get('body_preview')
+
+                if _subject == b_subject and _bodypreview == b_bodypreview:
+                    maillogger.warning(f"[{name}::{_idx}] duplicate, will be deleted !!! subject: {_subject}")
+                    ids.append(_idx)
+                    subjects.append(_subject)
+
+                b_subject, b_bodypreview = _subject, _bodypreview
+
+            if ids:
+                self.move_mails(fmailbox_id=idx, tmailbox_id=-6, ids=ids)
+                drop_mails[name] = list(zip(ids, subjects))
+        
+        return drop_mails
+
+    def get_mail_info(self, ids: list):
         api_name = 'SYNO.Entry.Request'
-        compound = [{"api": "SYNO.MailClient.Message", "method": "get", "id": id, "additional": ["blockquote", "truncated"]}]
+        compound = [{"api": "SYNO.MailClient.Message", "method": "get", "id": ids, "additional": ["blockquote", "truncated"]}]
         compound = json.dumps(compound)
         params = {'method': 'request', 'stop_when_error': 'false', 'compound': compound}
         snres_json = self.snapi_requests(api_name, params, method='post')
