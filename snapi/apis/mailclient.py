@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-23 16:16:15
+# @Last Modified time: 2023-07-23 16:43:25
 
 
 import os
@@ -11,7 +11,7 @@ import json
 from lxml import etree
 
 from .base import SnBaseApi
-from snapi.conf import UpdateApi
+from snapi.conf import APISerialize
 
 import logging
 maillogger = logging.getLogger(__name__)
@@ -101,7 +101,7 @@ class MailClient(SnBaseApi):
     def __init__(self, ip_address: str, port: str, username: str, password: str, otp_code: str = None):
         self.app = 'MailClient'
         super(MailClient, self).__init__(self.app, ip_address, port, username, password, otp_code)
-        self.update_mailbox_api = UpdateApi()
+        self.api = APISerialize()
         self.mailboxfile = os.path.join(os.getcwd(), 'snapi/conf/mailbox/mailbox.json')
 
     def get_mailboxes_api(self):
@@ -110,11 +110,11 @@ class MailClient(SnBaseApi):
                   'additional': ["unread_count", "draft_total_count"]}
         snres_json = self.snapi_requests(api_name, params, method='post')
         mailboxes = snres_json.get('data').get('mailbox')
-        self.update_mailbox_api.dump(self.mailboxfile, mailboxes)
+        self.api.dump(self.mailboxfile, mailboxes)
         return mailboxes
 
     def get_mailboxes(self):
-        mailboxes = self.update_mailbox_api.load(self.mailboxfile)
+        mailboxes = self.api.load(self.mailboxfile)
         if not mailboxes:
             mailboxes = self.get_mailboxes_api()
 
@@ -192,7 +192,7 @@ class MailClient(SnBaseApi):
             _mails = snres_json.get('data').get('thread')
             _ids = snres_json.get('data').get('matched_ids')
 
-        mails = [MailModel.parse_mail(mail).dict for mail in mails]
+        mails = [MailModel.parse_mail(mail) for mail in mails]
         counts = len(mails)
         mailbox = self.get_mailbox_info(mailbox_id=mailbox_id)
         mailbox_name = mailbox.get('path')

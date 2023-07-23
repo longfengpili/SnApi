@@ -2,13 +2,13 @@
 # @Author: longfengpili
 # @Date:   2023-07-20 17:40:35
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 10:52:45
+# @Last Modified time: 2023-07-23 16:34:58
 
 
 import os
 
 from snapi.snrequests import SnRequests
-from snapi.conf import UpdateApi
+from snapi.conf import APISerialize
 
 import logging
 apilogger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ class SnApi(SnRequests):
         self.port = port
         super(SnApi, self).__init__()
         self.apifile = os.path.join(os.getcwd(), 'snapi/conf/apis.json')
-        self.updateapi = UpdateApi()
+        self.api = APISerialize()
 
     def get_apis(self):
         api_name = 'SYNO.API.Info'
@@ -47,11 +47,11 @@ class SnApi(SnRequests):
         params = {'version': '1', 'method': 'query', 'query': 'all'}
         snres_json = self.sn_requests(urlpath, api_name, params)
         apis = snres_json['data']
-        self.updateapi.dump(self.apifile, apis)
+        self.api.dump(self.apifile, apis)
         return apis
 
     def get_api_info(self, api_name: str):
-        apis = self.updateapi.load(self.apifile)
+        apis = self.api.load(self.apifile)
         if not apis or api_name not in apis:
             os.remove(self.apifile)
             apis = self.get_apis()

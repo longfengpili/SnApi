@@ -2,7 +2,7 @@
 # @Author: chunyang.xu
 # @Date:   2023-07-22 09:54:04
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-23 09:57:27
+# @Last Modified time: 2023-07-23 16:23:20
 
 
 import os
@@ -12,7 +12,7 @@ import logging
 conflogger = logging.getLogger(__name__)
 
 
-class UpdateApi:
+class APISerialize:
 
     def __init__(self):
         pass
