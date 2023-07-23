@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 22:28:34
+# @Last Modified time: 2023-07-23 11:14:29
 
 
 import os
@@ -13,6 +13,72 @@ from snapi.conf import UpdateApi
 
 import logging
 maillogger = logging.getLogger(__name__)
+
+
+class MailModel:
+
+    def __init__(self, source: str, id: int, arrivaltime: int, subject: str, bodypreview: str, **kwargs):
+        self.source = source
+        self.id = id
+        self.arrivaltime = arrivaltime
+        self.subject = subject
+        self.bodypreview = bodypreview
+        self.kwargs = kwargs
+
+    def __repr__(self):
+        return f'[{self.arrivaltime}]{self.source}::{self.id}::{self.subject}'
+
+    def __eq__(self, other):
+        if isinstance(other, MailModel):
+            return (self.arrivaltime == other.arrivaltime and self.subject == other.subject and self.bodypreview == other.bodypreview)
+
+    @property
+    def dict(self):
+        mail = {'source': self.source, 'id': self.id, 'arrivaltime': self.arrivaltime,
+                'subject': self.subject, 'bodypreview': self.bodypreview}
+
+        mail.update(self.kwargs)
+        return mail
+
+    @property
+    def new_subject(self):
+        return f'[{self.arrivaltime}]{self.source}::{self.id}::{self.subject}'
+
+    @staticmethod
+    def flatten_dict(d: dict, parent_key: str = None, sep: str = '_'):
+        items = []
+        if isinstance(d, str):
+            return dict({})
+
+        for k, v in d.items():
+            new_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, dict):
+                next_dict = MailModel.flatten_dict(v, new_key, sep=sep)
+                items.extend(next_dict.items())
+            elif isinstance(v, list):
+                for idx, v_elem in enumerate(v):
+                    new_key = f'{new_key}{sep}{idx}'
+                    next_dict = MailModel.flatten_dict(v_elem, new_key, sep=sep)
+                    items.extend(next_dict.items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+
+    @classmethod
+    def parse_mail(cls, mail: dict, source: str = 'main'):
+        mail_flatten = cls.flatten_dict(mail)
+        key_mapping = {
+            'id': 'message_0_id',
+            'arrival_time': 'message_0_arrival_time',
+            'subject': 'message_0_subject',
+            'bodypreview': 'message_0_body_preview',
+        }
+        mail_flatten = {k: v for k, v in mail_flatten.items() if k not in key_mapping.keys()}
+        id = mail_flatten.get(key_mapping.get('id'))
+        arrivaltime = mail_flatten.get(key_mapping.get('arrival_time'))
+        subject = mail_flatten.get(key_mapping.get('subject'))
+        bodypreview = mail_flatten.get(key_mapping.get('bodypreview'))
+        return cls(source, id, arrivaltime, subject, bodypreview, **mail_flatten)
 
 
 class MailClient(SnBaseApi):
@@ -111,6 +177,7 @@ class MailClient(SnBaseApi):
             _mails = snres_json.get('data').get('thread')
             _ids = snres_json.get('data').get('matched_ids')
 
+        mails = [MailModel.parse_mail(mail).dict for mail in mails]
         counts = len(mails)
         mailbox = self.get_mailbox_info(mailbox_id=mailbox_id)
         mailbox_name = mailbox.get('path')
@@ -122,7 +189,7 @@ class MailClient(SnBaseApi):
         mailbox = self.get_mailbox_info(mailbox_name='Junk')
         mailbox_id = mailbox.get('id')
         ids, mails = self.get_mails(mailbox_id)
-        subjects = [mail.get('message')[0].get('subject') for mail in mails]
+        subjects = [mail.new_subject for mail in mails]
         params = {'method': 'report_spam', 'is_spam': 'false', 'operate_mailbox_id': mailbox_id,
                   'id': f'{ids}', 'conversation_view': 'false'}
         snres_json = self.snapi_requests(api_name, params, method='post')
@@ -160,13 +227,11 @@ class MailClient(SnBaseApi):
             mails_combine = zip(mails[:-1], mails[1:])
             for mails in mails_combine:
                 f_mail, s_mail = mails
-                f_idx, f_subject, f_bodypreview = parse_mail(f_mail)
-                s_idx, s_subject, s_bodypreview = parse_mail(s_mail) 
-
-                if f_subject == s_subject and f_bodypreview == s_bodypreview:
-                    maillogger.warning(f"[{mailbox_name}::{s_idx}] duplicate, will be deleted !!! subject: {s_subject}")
-                    ids.append(s_idx)
-                    subjects.append(s_subject)
+                if f_mail == s_mail:
+                    id, new_subject = s_mail.id, s_mail.new_subject
+                    maillogger.warning(f"[{mailbox_name}::{id}] duplicate, will be deleted !!! subject: {new_subject}")
+                    ids.append(id)
+                    subjects.append(new_subject)
 
             if ids:
                 self.move_mails(fmailbox_id=mailbox_id, tmailbox_id=-6, ids=ids)
