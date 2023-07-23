@@ -2,11 +2,13 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-23 12:40:46
+# @Last Modified time: 2023-07-23 16:16:15
 
 
 import os
+import re
 import json
+from lxml import etree
 
 from .base import SnBaseApi
 from snapi.conf import UpdateApi
@@ -71,6 +73,11 @@ class MailModel:
             for key in keys:
                 value = d.get(key)
                 if value:
+                    if key == 'body::html':
+                        html = etree.HTML(value)
+                        values = html.xpath('//text()')
+                        values = [re.sub(r'\s+', '', value) for value in values if value.strip()]
+                        value = '\n'.join(values)
                     return value
 
         mail_flatten = cls.flatten_dict(mail)
