@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-23 11:14:29
+# @Last Modified time: 2023-07-23 12:40:46
 
 
 import os
@@ -45,10 +45,11 @@ class MailModel:
         return f'[{self.arrivaltime}]{self.source}::{self.id}::{self.subject}'
 
     @staticmethod
-    def flatten_dict(d: dict, parent_key: str = None, sep: str = '_'):
+    def flatten_dict(d: dict, parent_key: str = None, sep: str = '::'):
         items = []
         if isinstance(d, str):
-            return dict({})
+            items.append((parent_key, d))
+            return dict(items)
 
         for k, v in d.items():
             new_key = f"{parent_key}{sep}{k}" if parent_key else k
@@ -65,19 +66,26 @@ class MailModel:
         return dict(items)
 
     @classmethod
-    def parse_mail(cls, mail: dict, source: str = 'main'):
+    def parse_mail(cls, mail: dict, source: str = 'mail'):
+        def get_value(d: dict, keys: list):
+            for key in keys:
+                value = d.get(key)
+                if value:
+                    return value
+
         mail_flatten = cls.flatten_dict(mail)
         key_mapping = {
-            'id': 'message_0_id',
-            'arrival_time': 'message_0_arrival_time',
-            'subject': 'message_0_subject',
-            'bodypreview': 'message_0_body_preview',
+            'id': ['message::0::id', 'id'],
+            'arrivaltime': ['message::0::arrival_time', 'arrival_time'],
+            'subject': ['message::0::subject', 'subject'],
+            'bodypreview': ['message::0::body_preview', 'body::html'],
         }
+        id = get_value(mail_flatten, key_mapping.get('id'))
+        arrivaltime = get_value(mail_flatten, key_mapping.get('arrivaltime'))
+        subject = get_value(mail_flatten, key_mapping.get('subject'))
+        bodypreview = get_value(mail_flatten, key_mapping.get('bodypreview'))
+
         mail_flatten = {k: v for k, v in mail_flatten.items() if k not in key_mapping.keys()}
-        id = mail_flatten.get(key_mapping.get('id'))
-        arrivaltime = mail_flatten.get(key_mapping.get('arrival_time'))
-        subject = mail_flatten.get(key_mapping.get('subject'))
-        bodypreview = mail_flatten.get(key_mapping.get('bodypreview'))
         return cls(source, id, arrivaltime, subject, bodypreview, **mail_flatten)
 
 
@@ -239,13 +247,15 @@ class MailClient(SnBaseApi):
         
         return drop_mails
 
-    def get_mail_info(self, ids: list):
+    def get_messages(self, ids: list):
         api_name = 'SYNO.Entry.Request'
         compound = [{"api": "SYNO.MailClient.Message", "method": "get", "id": ids, "additional": ["blockquote", "truncated"]}]
         compound = json.dumps(compound)
         params = {'method': 'request', 'stop_when_error': 'false', 'compound': compound}
         snres_json = self.snapi_requests(api_name, params, method='post')
-        return snres_json
+        messages = snres_json.get('data').get('result')[0].get('data').get('message')
+        messages = [MailModel.parse_mail(message, source='message').dict for message in messages]
+        return messages
 
     def spam_action(self):
         spam_action = {}

@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-23 11:14:22
+# @Last Modified time: 2023-07-23 12:33:42
 
 import json
 import pytest
@@ -71,7 +71,7 @@ class TestMailClient:
         snres_json = self.mailclient.spam_action()
         self.data_dump(snres_json)
 
-    def test_get_mail_info(self):
+    def test_get_messages(self):
         id = [49891, 49589]
-        snres_json = self.mailclient.get_mail_info(id)
+        snres_json = self.mailclient.get_messages(id)
         self.data_dump(snres_json)
