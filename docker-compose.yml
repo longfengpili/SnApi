@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  schedule:
+    build: 
+      context: ./docker
+      dockerfile: Dockerfile
+    restart: always
+    privileged: true #root权限
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        cron
+        crontab /etc/cron.d/crontab
+        tail -f /var/log/cron.log
+    volumes:
+      - .:/workspace
+      - ./docker/crontab:/etc/cron.d/crontab
