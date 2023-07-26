@@ -17,6 +17,8 @@ services:
     volumes:
       - .:/workspace
       - ./docker/crontab:/etc/cron.d/crontab
+    networks:
+      - mysnapi
 
 networks:
   mysnapi:
