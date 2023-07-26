@@ -6,7 +6,7 @@ services:
       context: ./docker
       dockerfile: Dockerfile
     restart: always
-    privileged: true #root权限
+    privileged: true  # root权限
     command: 
       - /bin/bash
       - -c
@@ -17,3 +17,7 @@ services:
     volumes:
       - .:/workspace
       - ./docker/crontab:/etc/cron.d/crontab
+
+  networks:
+    default:
+      driver: bridge  # Use a custom driver
