@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-25 15:09:36
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-25 16:34:56
+# @Last Modified time: 2023-07-26 10:49:39
 
 import os
 from snapi.apis import MailClient
@@ -27,5 +27,5 @@ if not ip_address:
 
 if __name__ == '__main__':
     
-    mailclient = MailClient(IP_ADDRESS, PORT, USERNAME, PASSWORD)
+    mailclient = MailClient(ip_address, port, username, password)
     snres_json = mailclient.spam_action()
