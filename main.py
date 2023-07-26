@@ -2,10 +2,14 @@
 # @Author: longfengpili
 # @Date:   2023-07-25 15:09:36
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-26 10:49:39
+# @Last Modified time: 2023-07-26 11:13:49
 
 import os
 from snapi.apis import MailClient
+
+import logging.config
+from snapi.conf.logconf import LOGGING_CONFIG
+logging.config.dictConfig(LOGGING_CONFIG)
 
 
 env = os.environ
