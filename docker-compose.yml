@@ -20,4 +20,5 @@ services:
 
 networks:
   mysnapi:
-    driver: bridge  # Use a custom driver
+    external: true
+    name: bridge
