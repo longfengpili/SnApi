@@ -17,4 +17,3 @@ services:
     volumes:
       - .:/workspace
       - ./docker/crontab:/etc/cron.d/crontab
-git@github.com:longfengpili/SnApi.git
