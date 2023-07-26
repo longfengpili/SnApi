@@ -19,5 +19,5 @@ services:
       - ./docker/crontab:/etc/cron.d/crontab
 
   networks:
-    default:
+    mysnapi:
       driver: bridge  # Use a custom driver
