@@ -2,14 +2,12 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:04:38
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-27 16:40:42
-
+# @Last Modified time: 2023-07-27 17:19:45
 
 import re
 import os
 import sys
 import colorlog
-
 
 # logging settings
 USERPATH = os.environ['USERPROFILE'] if 'USERPROFILE' in os.environ else os.environ['HOME'] if 'HOME' in os.environ else ''
@@ -49,19 +47,6 @@ LOGGING_CONFIG = {
                 'DEBUG': 'yellow'
             }
         },
-        # notebook color
-        'nbcolor': {
-            '()': colorlog.ColoredFormatter,
-            'format': '%(asctime)s.%(msecs)03d - %(levelname)s - %(lineno)d - %(log_color)s%(message)s',
-            'datefmt': '%Y-%m-%d %H:%M:%S',
-            'log_colors': {
-                'CRITICAL': 'bold_red',
-                'ERROR': 'red',
-                'WARNING': 'purple',
-                'INFO': 'green',
-                'DEBUG': 'yellow'
-            }
-        }
     },
     # 过滤器
     'filters': {
@@ -73,7 +58,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'filters': [],
             'class': 'logging.StreamHandler',  #
-            'formatter': 'color' if sys.stdout.isatty() else 'nbcolor' if any("jupyter" in arg for arg in sys.argv) else 'simple'
+            'formatter': 'color' if sys.stdout.isatty() or any("jupyter" in arg for arg in sys.argv) else 'simple'
         },
         # 默认的
         'default': {
