@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:04:38
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-27 13:44:15
+# @Last Modified time: 2023-07-27 16:40:42
 
 
 import re
@@ -48,6 +48,19 @@ LOGGING_CONFIG = {
                 'INFO': 'green',
                 'DEBUG': 'yellow'
             }
+        },
+        # notebook color
+        'nbcolor': {
+            '()': colorlog.ColoredFormatter,
+            'format': '%(asctime)s.%(msecs)03d - %(levelname)s - %(lineno)d - %(log_color)s%(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+            'log_colors': {
+                'CRITICAL': 'bold_red',
+                'ERROR': 'red',
+                'WARNING': 'purple',
+                'INFO': 'green',
+                'DEBUG': 'yellow'
+            }
         }
     },
     # 过滤器
@@ -60,7 +73,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'filters': [],
             'class': 'logging.StreamHandler',  #
-            'formatter': 'color' if sys.stdout.isatty() else 'simple'
+            'formatter': 'color' if sys.stdout.isatty() else 'nbcolor' if any("jupyter" in arg for arg in sys.argv) else 'simple'
         },
         # 默认的
         'default': {
@@ -74,7 +87,7 @@ LOGGING_CONFIG = {
             'encoding': 'utf-8',
         },
         'snrequests': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'snapi.conf.MakeFileHandler',  # 保存到文件，自动切
             'filename': os.path.join(LOG_BASE_PATH, f'{PROJECT_NAME}_snrequests.log'),  # 日志文件
             'when': 'd',  # 每小时备份
