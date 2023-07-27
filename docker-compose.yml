@@ -22,4 +22,5 @@ services:
 
 networks:
   mysnapi:
-    driver: bridge  # 定义为用户自定义网络
+    external: true
+    name: bridge
