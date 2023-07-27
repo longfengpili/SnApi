@@ -23,4 +23,4 @@ services:
 networks:
   mysnapi:
     external: true
-    name: bridge
+    name: host
