@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
-# @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-23 16:43:25
+# @Last Modified by:   longfengpili
+# @Last Modified time: 2023-07-27 17:30:07
 
 
 import os
@@ -172,7 +172,7 @@ class MailClient(SnBaseApi):
                 results[idx] = {'result': snres_json, 'condition': condition, 'action': action}
         return results
 
-    def get_mails(self, mailbox_id: int = -1, offset: int = 0, limit: int = 200):
+    def get_mails(self, mailbox_id: int = -1, offset: int = 0, limit: int = 200, getmax: int = 400):
         ids = []
         mails = []
         api_name = 'SYNO.MailClient.Thread'
@@ -183,7 +183,7 @@ class MailClient(SnBaseApi):
         snres_json = self.snapi_requests(api_name, params, method='post')
         _mails = snres_json.get('data').get('thread')
         _ids = snres_json.get('data').get('matched_ids')
-        while _mails:
+        while _mails and offset < getmax:
             mails.extend(_mails)
             ids.extend(_ids)
             offset += limit
@@ -268,8 +268,11 @@ class MailClient(SnBaseApi):
         spam_action = {}
         spam_result = self.spam_report()
         spam_action['spam_result'] = spam_result
-        filter_result = self.filter()
-        spam_action['filter_result'] = filter_result
-        drop_mails = self.drop_dumplicate_mails()
-        spam_action['drop_mails'] = drop_mails
+
+        if spam_result.get('info'):
+            filter_result = self.filter()
+            spam_action['filter_result'] = filter_result
+            drop_mails = self.drop_dumplicate_mails()
+            spam_action['drop_mails'] = drop_mails
+
         return spam_action
