@@ -1,7 +1,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-27 10:36:03
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-27 10:45:42
+# @Last Modified time: 2023-07-27 11:01:21
 
 getos=`uname -s`
 # 判断那系统和python地址
@@ -29,3 +29,4 @@ logInfo() {
 
 logInfo $LINENO "Current system is $sysOS【$getos】【$PWD】"
 $pyVer main.py
+logInfo $LINENO "Job stop"
