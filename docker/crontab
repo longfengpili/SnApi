@@ -1,3 +1,3 @@
 # m h dom mon dow user  command
 # every hour new
-30 */3 * * * /usr/bin/python3 /workspace/main.py
+30 */3 * * * /usr/bin/bash /workspace/job_run.sh 2>&1 >> /workspace/cron.log
