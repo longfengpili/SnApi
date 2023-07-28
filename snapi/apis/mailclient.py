@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-27 17:30:07
+# @Last Modified time: 2023-07-27 17:33:30
 
 
 import os
@@ -200,15 +200,18 @@ class MailClient(SnBaseApi):
         return ids, mails
 
     def spam_report(self):
+        snres_json = None
         api_name = 'SYNO.MailClient.Thread'
         mailbox = self.get_mailbox_info(mailbox_name='Junk')
         mailbox_id = mailbox.get('id')
         ids, mails = self.get_mails(mailbox_id)
-        subjects = [mail.new_subject for mail in mails]
-        params = {'method': 'report_spam', 'is_spam': 'false', 'operate_mailbox_id': mailbox_id,
-                  'id': f'{ids}', 'conversation_view': 'false'}
-        snres_json = self.snapi_requests(api_name, params, method='post')
-        snres_json['info'] = tuple(zip(ids, subjects))
+
+        if ids:
+            subjects = [mail.new_subject for mail in mails]
+            params = {'method': 'report_spam', 'is_spam': 'false', 'operate_mailbox_id': mailbox_id,
+                      'id': f'{ids}', 'conversation_view': 'false'}
+            snres_json = self.snapi_requests(api_name, params, method='post')
+            snres_json['info'] = tuple(zip(ids, subjects))
         return snres_json
 
     def move_mails(self, fmailbox_id: int, tmailbox_id: int, ids: list):
@@ -269,7 +272,7 @@ class MailClient(SnBaseApi):
         spam_result = self.spam_report()
         spam_action['spam_result'] = spam_result
 
-        if spam_result.get('info'):
+        if spam_result:
             filter_result = self.filter()
             spam_action['filter_result'] = filter_result
             drop_mails = self.drop_dumplicate_mails()
