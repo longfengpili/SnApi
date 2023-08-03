@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:04:38
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-27 17:19:45
+# @Last Modified time: 2023-08-03 11:57:31
 
 import re
 import os
@@ -10,8 +10,7 @@ import sys
 import colorlog
 
 # logging settings
-USERPATH = os.environ['USERPROFILE'] if 'USERPROFILE' in os.environ else os.environ['HOME'] if 'HOME' in os.environ else ''
-LOG_BASE_PATH = os.path.join(USERPATH, 'snapilog')  # 可以user目录下查看日志
+LOG_BASE_PATH = os.path.join(os.path.expanduser('~'), 'snapilog')  # 可以user目录下查看日志
 PROJECT_NAME = re.sub(':?\\\\', '_', os.getcwd())
 PROJECT_NAME = PROJECT_NAME[1:] if PROJECT_NAME.startswith('/') else PROJECT_NAME  # linux
 
