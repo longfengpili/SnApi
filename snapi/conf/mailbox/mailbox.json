@@ -1,171 +1,171 @@
 [
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "has_expired": false,
+        "id": -7,
+        "is_own": true,
+        "my_permission": "mailbox_special",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "SYNOMC_SCHEDULED",
+        "subscribed": true
     },
-    "has_expired": false,
-    "id": -7,
-    "is_own": true,
-    "my_permission": "mailbox_special",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "SYNOMC_SCHEDULED",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": -6,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "Trash",
+        "subscribed": true
     },
-    "id": -6,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "Trash",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": -5,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "Junk",
+        "subscribed": true
     },
-    "id": -5,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "Junk",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": -4,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "Sent",
+        "subscribed": true
     },
-    "id": -4,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "Sent",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": -3,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "Drafts",
+        "subscribed": true
     },
-    "id": -3,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "Drafts",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": -1,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "INBOX",
+        "subscribed": true
     },
-    "id": -1,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "INBOX",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": 1,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "Archived",
+        "subscribed": true
     },
-    "id": 1,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "Archived",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": 2,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "AAASincetimes",
+        "subscribed": true
     },
-    "id": 2,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "Github",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": 3,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "QQ",
+        "subscribed": true
     },
-    "id": 3,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "NAS",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": 4,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "Credit",
+        "subscribed": true
     },
-    "id": 4,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "VPN",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": 5,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "Github",
+        "subscribed": true
     },
-    "id": 5,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "Credit",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": 6,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "VPN",
+        "subscribed": true
     },
-    "id": 6,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "Ourpalm",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": 7,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "NAS",
+        "subscribed": true
     },
-    "id": 7,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "QQ",
-    "subscribed": true
-  },
-  {
-    "additional": {
-      "permission": []
-    },
-    "id": 8,
-    "is_own": true,
-    "my_permission": "mailbox_admin",
-    "owner": "longfengpili",
-    "owner_valid": true,
-    "path": "AAASincetimes",
-    "subscribed": true
-  }
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": 8,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "Ourpalm",
+        "subscribed": true
+    }
 ]

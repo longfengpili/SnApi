@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
-# @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-23 16:56:32
+# @Last Modified by:   longfengpili
+# @Last Modified time: 2023-09-05 15:30:13
 
 import json
 import pytest
@@ -35,6 +35,10 @@ class TestMailClient:
         snres_json = self.mailclient.get_mailbox_info(mailbox_name='Trash')
         self.data_dump(snres_json)
 
+    def test_get_mailbox_info2(self):
+        snres_json = self.mailclient.get_mailbox_info(mailbox_id=2)
+        self.data_dump(snres_json)
+
     def test_maillabels_api(self):
         snres_json = self.mailclient.get_maillabels_api()
         self.data_dump(snres_json)
@@ -55,7 +59,7 @@ class TestMailClient:
         self.data_dump(snres_json)
 
     def test_get_mails(self):
-        ids, mails = self.mailclient.get_mails(mailbox_id=-1, offset=0, limit=1000)
+        ids, mails = self.mailclient.get_mails(mailbox_id=3, offset=0, limit=1000)
         mails = [mail.dict for mail in mails]
         self.data_dump(mails)
 

@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-27 17:33:30
+# @Last Modified time: 2023-09-05 15:39:27
 
 
 import os
@@ -143,10 +143,12 @@ class MailClient(SnBaseApi):
         return snres_json
 
     def get_filters(self):
+        filterfile = os.path.join(os.getcwd(), 'snapi/conf/mailbox/mailflters.json')
         api_name = 'SYNO.MailClient.Filter'
         params = {'method': 'list'}
         snres_json = self.snapi_requests(api_name, params, method='post')
         filters = snres_json.get('data').get('filter')
+        self.api.dump(filterfile, filters)
         return filters
 
     def filter_act(self, condition: dict, action: dict, idx: int):
@@ -235,6 +237,7 @@ class MailClient(SnBaseApi):
         for mailbox in mailboxes:
             ids, subjects = [], []
             mailbox_name, mailbox_id = mailbox.get('path'), mailbox.get('id')
+            # maillogger.info(f"{mailbox}")
 
             if mailbox_name in ('Trash', 'Junk'):  # 跳过垃圾桶、垃圾邮件
                 continue
@@ -247,7 +250,7 @@ class MailClient(SnBaseApi):
                 f_mail, s_mail = mails
                 if f_mail == s_mail:
                     id, new_subject = s_mail.id, s_mail.new_subject
-                    maillogger.warning(f"[{mailbox_name}::{id}] duplicate, will be deleted !!! subject: {new_subject}")
+                    maillogger.warning(f"[{mailbox_name}::{mailbox_id}::{id}] duplicate, will be deleted !!! subject: {new_subject}")
                     ids.append(id)
                     subjects.append(new_subject)
 
@@ -271,11 +274,9 @@ class MailClient(SnBaseApi):
         spam_action = {}
         spam_result = self.spam_report()
         spam_action['spam_result'] = spam_result
-
-        if spam_result:
-            filter_result = self.filter()
-            spam_action['filter_result'] = filter_result
-            drop_mails = self.drop_dumplicate_mails()
-            spam_action['drop_mails'] = drop_mails
+        filter_result = self.filter()
+        spam_action['filter_result'] = filter_result
+        drop_mails = self.drop_dumplicate_mails()
+        spam_action['drop_mails'] = drop_mails
 
         return spam_action
