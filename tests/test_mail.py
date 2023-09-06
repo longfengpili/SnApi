@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-09-06 11:18:28
+# @Last Modified time: 2023-09-06 11:34:34
 
 import json
 import pytest
@@ -68,8 +68,8 @@ class TestMailClient:
         self.data_dump(snres_json)
 
     def test_drop_dumplicate_mails(self):
-        fmailbox_name = 'INBOX'
-        drop_mails = self.mailclient.drop_dumplicate_mails(fmailbox_name)
+        fmailbox_name = None  # 'INBOX'
+        drop_mails = self.mailclient.drop_dumplicate_mails(fmailbox_name, check_max=30000)
         self.data_dump(drop_mails)
 
     def test_spam_action(self):
