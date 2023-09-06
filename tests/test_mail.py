@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 14:27:27
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-09-05 15:30:13
+# @Last Modified time: 2023-09-06 11:18:28
 
 import json
 import pytest
@@ -73,7 +73,7 @@ class TestMailClient:
         self.data_dump(drop_mails)
 
     def test_spam_action(self):
-        snres_json = self.mailclient.spam_action()
+        snres_json = self.mailclient.spam_action(check_max=30000)
         self.data_dump(snres_json)
 
     def test_get_messages(self):

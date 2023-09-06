@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-09-05 15:39:27
+# @Last Modified time: 2023-09-06 11:13:44
 
 
 import os
@@ -224,7 +224,7 @@ class MailClient(SnBaseApi):
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
-    def drop_dumplicate_mails(self, fmailbox_name: str = None):
+    def drop_dumplicate_mails(self, check_mailbox_name: str = None, check_max: int = 1000):
         def parse_mail(mail: dict):
             idx, message = mail.get('id'), mail.get('message')[0]
             subject, arrivaltime, bodypreview = message.get('subject'), message.get('arrival_time'), message.get('body_preview')
@@ -241,10 +241,10 @@ class MailClient(SnBaseApi):
 
             if mailbox_name in ('Trash', 'Junk'):  # 跳过垃圾桶、垃圾邮件
                 continue
-            if fmailbox_name and mailbox_name != fmailbox_name:
+            if check_mailbox_name and mailbox_name != check_mailbox_name:
                 continue
 
-            _ids, mails = self.get_mails(mailbox_id, limit=1000)
+            _ids, mails = self.get_mails(mailbox_id, limit=1000, getmax=check_max)
             mails_combine = zip(mails[:-1], mails[1:])
             for mails in mails_combine:
                 f_mail, s_mail = mails
@@ -270,13 +270,13 @@ class MailClient(SnBaseApi):
         messages = [MailModel.parse_mail(message, source='message').dict for message in messages]
         return messages
 
-    def spam_action(self):
+    def spam_action(self, check_max: int = 1000):
         spam_action = {}
         spam_result = self.spam_report()
         spam_action['spam_result'] = spam_result
         filter_result = self.filter()
         spam_action['filter_result'] = filter_result
-        drop_mails = self.drop_dumplicate_mails()
+        drop_mails = self.drop_dumplicate_mails(check_max=check_max)
         spam_action['drop_mails'] = drop_mails
 
         return spam_action

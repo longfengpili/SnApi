@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-25 15:09:36
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-26 11:13:49
+# @Last Modified time: 2023-09-06 11:18:09
 
 import os
 from snapi.apis import MailClient
