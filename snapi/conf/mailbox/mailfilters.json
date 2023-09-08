@@ -12,9 +12,9 @@
         ],
         "condition": [
             {
-                "name": "subject",
+                "name": "to",
                 "not_operator": false,
-                "value": "QQ OR 腾讯"
+                "value": "398745129@qq.com"
             }
         ],
         "enabled": true,
@@ -33,9 +33,9 @@
         ],
         "condition": [
             {
-                "name": "to",
+                "name": "from",
                 "not_operator": false,
-                "value": "398745129@qq.com"
+                "value": "QQ OR 腾讯"
             }
         ],
         "enabled": true,

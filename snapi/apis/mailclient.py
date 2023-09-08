@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-09-08 10:50:07
+# @Last Modified time: 2023-09-08 11:02:26
 
 
 import os
@@ -142,16 +142,13 @@ class MailClient(SnBaseApi):
         snres_json = self.snapi_requests(api_name, params, method='post')
         return snres_json
 
-    def get_filters(self, is_download: bool = False):
+    def get_filters(self):
         filterfile = os.path.join(os.getcwd(), 'snapi/conf/mailbox/mailfilters.json')
-        filters = self.api.load(filterfile)
-
-        if is_download:
-            api_name = 'SYNO.MailClient.Filter'
-            params = {'method': 'list'}
-            snres_json = self.snapi_requests(api_name, params, method='post')
-            filters = snres_json.get('data').get('filter')
-        
+        api_name = 'SYNO.MailClient.Filter'
+        params = {'method': 'list'}
+        snres_json = self.snapi_requests(api_name, params, method='post')
+        filters = snres_json.get('data').get('filter')
+        self.api.dump(filterfile, filters)
         return filters
 
     def filter_act(self, condition: dict, action: dict, idx: int):
