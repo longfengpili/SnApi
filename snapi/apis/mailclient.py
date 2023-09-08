@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-09-08 10:29:51
+# @Last Modified time: 2023-09-08 10:50:07
 
 
 import os
@@ -143,7 +143,7 @@ class MailClient(SnBaseApi):
         return snres_json
 
     def get_filters(self, is_download: bool = False):
-        filterfile = os.path.join(os.getcwd(), 'snapi/conf/mailbox/mailflters.json')
+        filterfile = os.path.join(os.getcwd(), 'snapi/conf/mailbox/mailfilters.json')
         filters = self.api.load(filterfile)
 
         if is_download:
