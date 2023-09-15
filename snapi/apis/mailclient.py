@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 18:46:50
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-09-08 11:02:26
+# @Last Modified time: 2023-09-15 10:58:04
 
 
 import os
@@ -114,9 +114,9 @@ class MailClient(SnBaseApi):
         return mailboxes
 
     def get_mailboxes(self):
-        mailboxes = self.api.load(self.mailboxfile)
-        if not mailboxes:
-            mailboxes = self.get_mailboxes_api()
+        # mailboxes = self.api.load(self.mailboxfile)
+        # if not mailboxes:
+        mailboxes = self.get_mailboxes_api()
 
         return mailboxes
 

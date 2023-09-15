@@ -93,7 +93,7 @@
         "my_permission": "mailbox_admin",
         "owner": "longfengpili",
         "owner_valid": true,
-        "path": "AAASincetimes",
+        "path": "QQ",
         "subscribed": true
     },
     {
@@ -105,7 +105,7 @@
         "my_permission": "mailbox_admin",
         "owner": "longfengpili",
         "owner_valid": true,
-        "path": "QQ",
+        "path": "Credit",
         "subscribed": true
     },
     {
@@ -117,7 +117,7 @@
         "my_permission": "mailbox_admin",
         "owner": "longfengpili",
         "owner_valid": true,
-        "path": "Credit",
+        "path": "Github",
         "subscribed": true
     },
     {
@@ -129,7 +129,7 @@
         "my_permission": "mailbox_admin",
         "owner": "longfengpili",
         "owner_valid": true,
-        "path": "Github",
+        "path": "VPN",
         "subscribed": true
     },
     {
@@ -141,7 +141,7 @@
         "my_permission": "mailbox_admin",
         "owner": "longfengpili",
         "owner_valid": true,
-        "path": "VPN",
+        "path": "NAS",
         "subscribed": true
     },
     {
@@ -153,19 +153,7 @@
         "my_permission": "mailbox_admin",
         "owner": "longfengpili",
         "owner_valid": true,
-        "path": "NAS",
-        "subscribed": true
-    },
-    {
-        "additional": {
-            "permission": []
-        },
-        "id": 8,
-        "is_own": true,
-        "my_permission": "mailbox_admin",
-        "owner": "longfengpili",
-        "owner_valid": true,
-        "path": "Ourpalm",
+        "path": "AAASincetimes",
         "subscribed": true
     }
 ]
