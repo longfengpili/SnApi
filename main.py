@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-25 15:09:36
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-09-06 11:18:09
+# @Last Modified time: 2023-10-12 10:21:06
 
 import os
 from snapi.apis import MailClient
@@ -32,4 +32,4 @@ if not ip_address:
 if __name__ == '__main__':
     
     mailclient = MailClient(ip_address, port, username, password)
-    snres_json = mailclient.spam_action()
+    drop_mails = mailclient.drop_dumplicate_mails(check_max=1000)

@@ -3,7 +3,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 3
+                "value": 2
             },
             {
                 "name": "set_label",
@@ -23,17 +23,13 @@
     {
         "action": [
             {
-                "name": "move_to",
-                "value": 3
-            },
-            {
                 "name": "set_label",
                 "value": 1
             }
         ],
         "condition": [
             {
-                "name": "from",
+                "name": "subject",
                 "not_operator": false,
                 "value": "QQ OR 腾讯"
             }
@@ -45,7 +41,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 4
+                "value": 3
             },
             {
                 "name": "set_label",
@@ -66,7 +62,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 4
+                "value": 3
             },
             {
                 "name": "set_label",
@@ -87,7 +83,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 4
+                "value": 3
             },
             {
                 "name": "set_label",
@@ -108,7 +104,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 4
+                "value": 3
             },
             {
                 "name": "set_label",
@@ -129,7 +125,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 4
+                "value": 3
             },
             {
                 "name": "set_label",
@@ -150,7 +146,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 5
+                "value": 4
             },
             {
                 "name": "set_label",
@@ -171,7 +167,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 5
+                "value": 4
             },
             {
                 "name": "set_label",
@@ -192,7 +188,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 6
+                "value": 5
             },
             {
                 "name": "set_label",
@@ -213,7 +209,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 7
+                "value": 6
             },
             {
                 "name": "set_label",
@@ -234,7 +230,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 7
+                "value": 6
             },
             {
                 "name": "set_label",
@@ -255,7 +251,7 @@
         "action": [
             {
                 "name": "move_to",
-                "value": 7
+                "value": 6
             },
             {
                 "name": "set_label",
@@ -264,7 +260,7 @@
         ],
         "condition": [
             {
-                "name": "subject",
+                "name": "keyword",
                 "not_operator": false,
                 "value": "[Synology 支持]"
             }
