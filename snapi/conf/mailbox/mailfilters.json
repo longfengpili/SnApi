@@ -3,6 +3,23 @@
         "action": [
             {
                 "name": "move_to",
+                "value": 8
+            }
+        ],
+        "condition": [
+            {
+                "name": "to",
+                "not_operator": false,
+                "value": "13810438118@139.com"
+            }
+        ],
+        "enabled": true,
+        "id": 15
+    },
+    {
+        "action": [
+            {
+                "name": "move_to",
                 "value": 2
             },
             {
@@ -19,6 +36,27 @@
         ],
         "enabled": true,
         "id": 1
+    },
+    {
+        "action": [
+            {
+                "name": "move_to",
+                "value": 2
+            },
+            {
+                "name": "set_label",
+                "value": 1
+            }
+        ],
+        "condition": [
+            {
+                "name": "to",
+                "not_operator": false,
+                "value": "longfengpili@qq.com"
+            }
+        ],
+        "enabled": true,
+        "id": 16
     },
     {
         "action": [
@@ -260,7 +298,7 @@
         ],
         "condition": [
             {
-                "name": "keyword",
+                "name": "subject",
                 "not_operator": false,
                 "value": "[Synology 支持]"
             }

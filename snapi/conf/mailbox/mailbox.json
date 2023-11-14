@@ -155,5 +155,17 @@
         "owner_valid": true,
         "path": "AAASincetimes",
         "subscribed": true
+    },
+    {
+        "additional": {
+            "permission": []
+        },
+        "id": 8,
+        "is_own": true,
+        "my_permission": "mailbox_admin",
+        "owner": "longfengpili",
+        "owner_valid": true,
+        "path": "139",
+        "subscribed": true
     }
 ]
