@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Author: longfengpili
 # @Date:   2023-07-17 16:47:30
-# @Last Modified by:   chunyang.xu
-# @Last Modified time: 2023-07-22 14:46:29
+# @Last Modified by:   longfengpili
+# @Last Modified time: 2023-11-24 10:29:44
 
 import json
 
@@ -41,7 +41,10 @@ class SnBaseApi(SnRequests):
         sid = self.sid
         api_info = self.get_api_info(api_name)
         urlpath, version = api_info.get('path'), api_info.get('maxVersion')
-        params['version'] = version
+
+        if 'version' not in params:
+            params['version'] = version
+            
         snres_json = self.sn_requests(urlpath, api_name, params, sid=sid, method=method)
         return snres_json
 

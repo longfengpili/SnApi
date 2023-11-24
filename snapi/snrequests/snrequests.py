@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-17 17:12:49
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-07-27 17:22:48
+# @Last Modified time: 2023-11-24 10:11:16
 
 
 import requests
@@ -38,9 +38,9 @@ class SnRequests:
     def sn_requests(self, urlpath: str, api_name: str, params: dict, sid: str = None, method: str = 'get'):
         def request_by_method(method: str, url: str, params: dict, data: dict = None):
             if method == 'post':
-                snres = requests.post(url, params, verify=self.verify)
+                snres = requests.post(url, data=params, verify=self.verify)
             else:
-                snres = requests.get(url, params, verify=self.verify)
+                snres = requests.get(url, params=params, verify=self.verify)
 
             snrequestlogger.debug(f"[{method.upper()}]{snres.url}, params: {params}")
             return snres
