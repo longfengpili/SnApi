@@ -2,7 +2,7 @@
 # @Author: longfengpili
 # @Date:   2023-07-25 15:09:36
 # @Last Modified by:   longfengpili
-# @Last Modified time: 2023-11-14 10:06:38
+# @Last Modified time: 2025-06-13 10:19:59
 
 import os
 from snapi.apis import MailClient
@@ -32,4 +32,7 @@ if not ip_address:
 if __name__ == '__main__':
     
     mailclient = MailClient(ip_address, port, username, password)
+    # 删除重复
     drop_mails = mailclient.drop_dumplicate_mails(check_max=100000)
+    # 执行过滤器
+    # results = mailclient.filter()

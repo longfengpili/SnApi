@@ -69,7 +69,7 @@
             {
                 "name": "subject",
                 "not_operator": false,
-                "value": "QQ OR 腾讯"
+                "value": "\"QQ\" OR \"腾讯\""
             }
         ],
         "enabled": true,
@@ -226,6 +226,27 @@
         "action": [
             {
                 "name": "move_to",
+                "value": 4
+            },
+            {
+                "name": "set_label",
+                "value": 3
+            }
+        ],
+        "condition": [
+            {
+                "name": "from",
+                "not_operator": false,
+                "value": "support@github.com"
+            }
+        ],
+        "enabled": true,
+        "id": 18
+    },
+    {
+        "action": [
+            {
+                "name": "move_to",
                 "value": 5
             },
             {
@@ -305,6 +326,27 @@
         ],
         "enabled": true,
         "id": 13
+    },
+    {
+        "action": [
+            {
+                "name": "move_to",
+                "value": 6
+            },
+            {
+                "name": "set_label",
+                "value": 5
+            }
+        ],
+        "condition": [
+            {
+                "name": "from",
+                "not_operator": false,
+                "value": "noreply@synologynotification.com"
+            }
+        ],
+        "enabled": true,
+        "id": 17
     },
     {
         "action": [
